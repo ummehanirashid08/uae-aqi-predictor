@@ -1,0 +1,26 @@
+name: Feature pipeline hourly
+
+on:
+  schedule:
+    - cron: "0 * * * *"
+  workflow_dispatch:
+
+jobs:
+  feature-pipeline:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: pip install -r requirements.txt
+      - run: python src/feature_pipeline.py --latitude 25.2048 --longitude 55.2708 --timezone Asia/Dubai --past-days 10 --forecast-days 3
+      - name: Commit updated feature store
+        run: |
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+          git add data/feature_store.parquet || true
+          git commit -m "Update feature store" || echo "No changes"
+          git push || true
