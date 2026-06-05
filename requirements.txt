@@ -9,3 +9,4 @@ pyarrow==18.0.0
 python-dotenv
 hopsworks==4.7.*
 confluent-kafka
+shap==0.46.0

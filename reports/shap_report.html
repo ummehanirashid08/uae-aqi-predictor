@@ -1,0 +1,895 @@
+
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <meta charset="utf-8">
+        <title>AQI SHAP Explainability Report</title>
+        <style>
+            body {
+                margin: 0;
+                padding: 0;
+                background: #f8fafc;
+                font-family: Arial, sans-serif;
+                color: #0f172a;
+            }
+
+            .container {
+                max-width: 1180px;
+                margin: 0 auto;
+                padding: 34px 24px 60px;
+            }
+
+            .hero {
+                background: linear-gradient(135deg, #fff8d8 0%, #facc15 100%);
+                border: 1px solid #fde68a;
+                border-radius: 28px;
+                padding: 34px;
+                box-shadow: 0 18px 40px rgba(15, 23, 42, 0.08);
+                margin-bottom: 24px;
+            }
+
+            .hero h1 {
+                margin: 0 0 10px;
+                font-size: 38px;
+                letter-spacing: -1px;
+            }
+
+            .hero p {
+                margin: 0;
+                color: #475569;
+                font-size: 16px;
+                font-weight: 700;
+            }
+
+            .card {
+                background: #fffdf2;
+                border: 1px solid #f3e8a2;
+                border-radius: 24px;
+                padding: 24px;
+                box-shadow: 0 14px 34px rgba(15, 23, 42, 0.06);
+                margin-bottom: 24px;
+            }
+
+            .grid {
+                display: grid;
+                grid-template-columns: repeat(4, 1fr);
+                gap: 16px;
+                margin-bottom: 24px;
+            }
+
+            .metric {
+                background: white;
+                border: 1px solid #e5e7eb;
+                border-radius: 18px;
+                padding: 18px;
+            }
+
+            .metric-title {
+                color: #64748b;
+                font-size: 13px;
+                font-weight: 800;
+                margin-bottom: 8px;
+            }
+
+            .metric-value {
+                font-size: 28px;
+                font-weight: 900;
+                color: #0f172a;
+            }
+
+            h2 {
+                font-size: 26px;
+                margin: 0 0 16px;
+                letter-spacing: -0.7px;
+            }
+
+            .note {
+                background: #eff6ff;
+                color: #1e40af;
+                border: 1px solid #bfdbfe;
+                border-radius: 18px;
+                padding: 16px;
+                font-weight: 700;
+                line-height: 1.55;
+                margin-bottom: 24px;
+            }
+
+            .warning {
+                background: #fff7ed;
+                color: #9a3412;
+                border: 1px solid #fed7aa;
+                border-radius: 18px;
+                padding: 16px;
+                font-weight: 700;
+                line-height: 1.55;
+                margin-bottom: 24px;
+            }
+
+            table {
+                width: 100%;
+                border-collapse: collapse;
+                background: white;
+                border-radius: 16px;
+                overflow: hidden;
+            }
+
+            th, td {
+                text-align: left;
+                border-bottom: 1px solid #e5e7eb;
+                padding: 12px 14px;
+                font-size: 14px;
+            }
+
+            th {
+                background: #f1f5f9;
+                font-weight: 900;
+                color: #334155;
+            }
+
+            pre {
+                white-space: pre-wrap;
+                background: #0f172a;
+                color: #e5e7eb;
+                border-radius: 18px;
+                padding: 18px;
+                overflow-x: auto;
+            }
+
+            @media (max-width: 900px) {
+                .grid {
+                    grid-template-columns: repeat(2, 1fr);
+                }
+            }
+
+            @media (max-width: 600px) {
+                .grid {
+                    grid-template-columns: 1fr;
+                }
+
+                .hero h1 {
+                    font-size: 30px;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <div class="hero">
+                <h1>AQI SHAP Explainability Report</h1>
+                <p>Generated automatically on 2026-06-05 16:32:28 UTC</p>
+            </div>
+            
+        <div class="note">
+            SHAP explains how much each feature contributes to the model prediction.
+            Higher mean absolute SHAP values mean the feature has stronger influence on the AQI forecast.
+            To keep runtime safe in local and GitHub Actions environments, SHAP is calculated on a recent sample of rows.
+        </div>
+        
+
+                <div class="card">
+                    <h2>SHAP Explanation: day_1</h2>
+                    <div>                        <script type="text/javascript">window.PlotlyConfig = {MathJaxConfig: 'local'};</script>
+        <script charset="utf-8" src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>                <div id="199289e2-00d5-4b21-844a-7d634876a9b6" class="plotly-graph-div" style="height:620px; width:100%;"></div>            <script type="text/javascript">                                    window.PLOTLYENV=window.PLOTLYENV || {};                                    if (document.getElementById("199289e2-00d5-4b21-844a-7d634876a9b6")) {                    Plotly.newPlot(                        "199289e2-00d5-4b21-844a-7d634876a9b6",                        [{"alignmentgroup":"True","hovertemplate":"mean_abs_shap=%{marker.color}\u003cbr\u003efeature=%{y}\u003cextra\u003e\u003c\u002fextra\u003e","legendgroup":"","marker":{"color":[1.0337824464161032,1.0826428394515253,1.126391486146674,1.1767217730397597,1.2113649277254148,1.468124648956355,1.5041221195021508,1.7388428026927987,1.9512585596106904,1.985366204171872,2.0280739379435557,2.8079619643463993,2.8403217738357514,2.8936066331799544,3.1157658393787404,3.235479074452631,3.256433615387194,3.544879274566311,4.318569521399442,4.569300083523043],"coloraxis":"coloraxis","pattern":{"shape":""}},"name":"","offsetgroup":"","orientation":"h","showlegend":false,"textposition":"auto","x":[1.0337824464161032,1.0826428394515253,1.126391486146674,1.1767217730397597,1.2113649277254148,1.468124648956355,1.5041221195021508,1.7388428026927987,1.9512585596106904,1.985366204171872,2.0280739379435557,2.8079619643463993,2.8403217738357514,2.8936066331799544,3.1157658393787404,3.235479074452631,3.256433615387194,3.544879274566311,4.318569521399442,4.569300083523043],"xaxis":"x","y":["aqi_lag_3h","aqi_lag_1h","future_wind_day1_max","future_wind_day3_avg","latitude","aqi_rolling_mean_12h","aqi_lag_24h","surface_pressure","aqi_lag_6h","future_temp_day2_avg","future_wind_direction_day3_avg","aqi_rolling_mean_24h","future_pressure_day2_avg","us_aqi","future_temp_day1_avg","pm25_rolling_mean_24h","wind_speed_rolling_mean_24h","future_temp_day3_avg","future_pressure_day1_avg","pm10_rolling_mean_24h"],"yaxis":"y","type":"bar"}],                        {"template":{"data":{"histogram2dcontour":[{"type":"histogram2dcontour","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"choropleth":[{"type":"choropleth","colorbar":{"outlinewidth":0,"ticks":""}}],"histogram2d":[{"type":"histogram2d","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"heatmap":[{"type":"heatmap","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"heatmapgl":[{"type":"heatmapgl","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"contourcarpet":[{"type":"contourcarpet","colorbar":{"outlinewidth":0,"ticks":""}}],"contour":[{"type":"contour","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"surface":[{"type":"surface","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"mesh3d":[{"type":"mesh3d","colorbar":{"outlinewidth":0,"ticks":""}}],"scatter":[{"fillpattern":{"fillmode":"overlay","size":10,"solidity":0.2},"type":"scatter"}],"parcoords":[{"type":"parcoords","line":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterpolargl":[{"type":"scatterpolargl","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"bar":[{"error_x":{"color":"#2a3f5f"},"error_y":{"color":"#2a3f5f"},"marker":{"line":{"color":"#E5ECF6","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"bar"}],"scattergeo":[{"type":"scattergeo","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterpolar":[{"type":"scatterpolar","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"histogram":[{"marker":{"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"histogram"}],"scattergl":[{"type":"scattergl","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatter3d":[{"type":"scatter3d","line":{"colorbar":{"outlinewidth":0,"ticks":""}},"marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scattermapbox":[{"type":"scattermapbox","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterternary":[{"type":"scatterternary","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scattercarpet":[{"type":"scattercarpet","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"carpet":[{"aaxis":{"endlinecolor":"#2a3f5f","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"#2a3f5f"},"baxis":{"endlinecolor":"#2a3f5f","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"#2a3f5f"},"type":"carpet"}],"table":[{"cells":{"fill":{"color":"#EBF0F8"},"line":{"color":"white"}},"header":{"fill":{"color":"#C8D4E3"},"line":{"color":"white"}},"type":"table"}],"barpolar":[{"marker":{"line":{"color":"#E5ECF6","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"barpolar"}],"pie":[{"automargin":true,"type":"pie"}]},"layout":{"autotypenumbers":"strict","colorway":["#636efa","#EF553B","#00cc96","#ab63fa","#FFA15A","#19d3f3","#FF6692","#B6E880","#FF97FF","#FECB52"],"font":{"color":"#2a3f5f"},"hovermode":"closest","hoverlabel":{"align":"left"},"paper_bgcolor":"white","plot_bgcolor":"#E5ECF6","polar":{"bgcolor":"#E5ECF6","angularaxis":{"gridcolor":"white","linecolor":"white","ticks":""},"radialaxis":{"gridcolor":"white","linecolor":"white","ticks":""}},"ternary":{"bgcolor":"#E5ECF6","aaxis":{"gridcolor":"white","linecolor":"white","ticks":""},"baxis":{"gridcolor":"white","linecolor":"white","ticks":""},"caxis":{"gridcolor":"white","linecolor":"white","ticks":""}},"coloraxis":{"colorbar":{"outlinewidth":0,"ticks":""}},"colorscale":{"sequential":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"sequentialminus":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"diverging":[[0,"#8e0152"],[0.1,"#c51b7d"],[0.2,"#de77ae"],[0.3,"#f1b6da"],[0.4,"#fde0ef"],[0.5,"#f7f7f7"],[0.6,"#e6f5d0"],[0.7,"#b8e186"],[0.8,"#7fbc41"],[0.9,"#4d9221"],[1,"#276419"]]},"xaxis":{"gridcolor":"white","linecolor":"white","ticks":"","title":{"standoff":15},"zerolinecolor":"white","automargin":true,"zerolinewidth":2},"yaxis":{"gridcolor":"white","linecolor":"white","ticks":"","title":{"standoff":15},"zerolinecolor":"white","automargin":true,"zerolinewidth":2},"scene":{"xaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2},"yaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2},"zaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2}},"shapedefaults":{"line":{"color":"#2a3f5f"}},"annotationdefaults":{"arrowcolor":"#2a3f5f","arrowhead":0,"arrowwidth":1},"geo":{"bgcolor":"white","landcolor":"#E5ECF6","subunitcolor":"white","showland":true,"showlakes":true,"lakecolor":"white"},"title":{"x":0.05},"mapbox":{"style":"light"}}},"xaxis":{"anchor":"y","domain":[0.0,1.0],"title":{"text":"mean_abs_shap"}},"yaxis":{"anchor":"x","domain":[0.0,1.0],"title":{"text":"feature"}},"coloraxis":{"colorbar":{"title":{"text":"mean_abs_shap"}},"colorscale":[[0.0,"#440154"],[0.1111111111111111,"#482878"],[0.2222222222222222,"#3e4989"],[0.3333333333333333,"#31688e"],[0.4444444444444444,"#26828e"],[0.5555555555555556,"#1f9e89"],[0.6666666666666666,"#35b779"],[0.7777777777777778,"#6ece58"],[0.8888888888888888,"#b5de2b"],[1.0,"#fde725"]]},"legend":{"tracegroupgap":0},"title":{"text":"SHAP Feature Impact for day_1","font":{"size":22,"color":"#0f172a"}},"barmode":"relative","font":{"color":"#0f172a","family":"Arial, sans-serif"},"margin":{"l":30,"r":30,"t":70,"b":40},"height":620,"plot_bgcolor":"#fffdf2","paper_bgcolor":"#fffdf2"},                        {"responsive": true}                    )                };                            </script>        </div>
+                    <table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>target</th>
+      <th>model_name</th>
+      <th>feature</th>
+      <th>mean_abs_shap</th>
+      <th>rows_explained</th>
+      <th>background_rows</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>day_1</td>
+      <td>gradient_boosting</td>
+      <td>pm10_rolling_mean_24h</td>
+      <td>4.569300</td>
+      <td>120</td>
+      <td>60</td>
+    </tr>
+    <tr>
+      <td>day_1</td>
+      <td>gradient_boosting</td>
+      <td>future_pressure_day1_avg</td>
+      <td>4.318570</td>
+      <td>120</td>
+      <td>60</td>
+    </tr>
+    <tr>
+      <td>day_1</td>
+      <td>gradient_boosting</td>
+      <td>future_temp_day3_avg</td>
+      <td>3.544879</td>
+      <td>120</td>
+      <td>60</td>
+    </tr>
+    <tr>
+      <td>day_1</td>
+      <td>gradient_boosting</td>
+      <td>wind_speed_rolling_mean_24h</td>
+      <td>3.256434</td>
+      <td>120</td>
+      <td>60</td>
+    </tr>
+    <tr>
+      <td>day_1</td>
+      <td>gradient_boosting</td>
+      <td>pm25_rolling_mean_24h</td>
+      <td>3.235479</td>
+      <td>120</td>
+      <td>60</td>
+    </tr>
+    <tr>
+      <td>day_1</td>
+      <td>gradient_boosting</td>
+      <td>future_temp_day1_avg</td>
+      <td>3.115766</td>
+      <td>120</td>
+      <td>60</td>
+    </tr>
+    <tr>
+      <td>day_1</td>
+      <td>gradient_boosting</td>
+      <td>us_aqi</td>
+      <td>2.893607</td>
+      <td>120</td>
+      <td>60</td>
+    </tr>
+    <tr>
+      <td>day_1</td>
+      <td>gradient_boosting</td>
+      <td>future_pressure_day2_avg</td>
+      <td>2.840322</td>
+      <td>120</td>
+      <td>60</td>
+    </tr>
+    <tr>
+      <td>day_1</td>
+      <td>gradient_boosting</td>
+      <td>aqi_rolling_mean_24h</td>
+      <td>2.807962</td>
+      <td>120</td>
+      <td>60</td>
+    </tr>
+    <tr>
+      <td>day_1</td>
+      <td>gradient_boosting</td>
+      <td>future_wind_direction_day3_avg</td>
+      <td>2.028074</td>
+      <td>120</td>
+      <td>60</td>
+    </tr>
+    <tr>
+      <td>day_1</td>
+      <td>gradient_boosting</td>
+      <td>future_temp_day2_avg</td>
+      <td>1.985366</td>
+      <td>120</td>
+      <td>60</td>
+    </tr>
+    <tr>
+      <td>day_1</td>
+      <td>gradient_boosting</td>
+      <td>aqi_lag_6h</td>
+      <td>1.951259</td>
+      <td>120</td>
+      <td>60</td>
+    </tr>
+    <tr>
+      <td>day_1</td>
+      <td>gradient_boosting</td>
+      <td>surface_pressure</td>
+      <td>1.738843</td>
+      <td>120</td>
+      <td>60</td>
+    </tr>
+    <tr>
+      <td>day_1</td>
+      <td>gradient_boosting</td>
+      <td>aqi_lag_24h</td>
+      <td>1.504122</td>
+      <td>120</td>
+      <td>60</td>
+    </tr>
+    <tr>
+      <td>day_1</td>
+      <td>gradient_boosting</td>
+      <td>aqi_rolling_mean_12h</td>
+      <td>1.468125</td>
+      <td>120</td>
+      <td>60</td>
+    </tr>
+    <tr>
+      <td>day_1</td>
+      <td>gradient_boosting</td>
+      <td>latitude</td>
+      <td>1.211365</td>
+      <td>120</td>
+      <td>60</td>
+    </tr>
+    <tr>
+      <td>day_1</td>
+      <td>gradient_boosting</td>
+      <td>future_wind_day3_avg</td>
+      <td>1.176722</td>
+      <td>120</td>
+      <td>60</td>
+    </tr>
+    <tr>
+      <td>day_1</td>
+      <td>gradient_boosting</td>
+      <td>future_wind_day1_max</td>
+      <td>1.126391</td>
+      <td>120</td>
+      <td>60</td>
+    </tr>
+    <tr>
+      <td>day_1</td>
+      <td>gradient_boosting</td>
+      <td>aqi_lag_1h</td>
+      <td>1.082643</td>
+      <td>120</td>
+      <td>60</td>
+    </tr>
+    <tr>
+      <td>day_1</td>
+      <td>gradient_boosting</td>
+      <td>aqi_lag_3h</td>
+      <td>1.033782</td>
+      <td>120</td>
+      <td>60</td>
+    </tr>
+  </tbody>
+</table>
+                </div>
+                
+
+                <div class="card">
+                    <h2>SHAP Explanation: day_2</h2>
+                    <div>                        <script type="text/javascript">window.PlotlyConfig = {MathJaxConfig: 'local'};</script>
+        <script charset="utf-8" src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>                <div id="9aa195cf-f1c0-42e9-a35e-aa4b97fae795" class="plotly-graph-div" style="height:620px; width:100%;"></div>            <script type="text/javascript">                                    window.PLOTLYENV=window.PLOTLYENV || {};                                    if (document.getElementById("9aa195cf-f1c0-42e9-a35e-aa4b97fae795")) {                    Plotly.newPlot(                        "9aa195cf-f1c0-42e9-a35e-aa4b97fae795",                        [{"alignmentgroup":"True","hovertemplate":"mean_abs_shap=%{marker.color}\u003cbr\u003efeature=%{y}\u003cextra\u003e\u003c\u002fextra\u003e","legendgroup":"","marker":{"color":[0.34321886076125624,0.35058850438745615,0.362970532121034,0.4413888236447485,0.4773436935345835,0.5336610992301621,0.5353208949005293,0.5562397373482123,0.55799916252986,0.6224867975920083,0.7382855998994614,1.219253562375962,1.9525581396471208,2.1702549460687672,2.569836747870181,2.747560537779045,3.782354527691821,5.773898212100107,10.030680215258378,10.632871106536838],"coloraxis":"coloraxis","pattern":{"shape":""}},"name":"","offsetgroup":"","orientation":"h","showlegend":false,"textposition":"auto","x":[0.34321886076125624,0.35058850438745615,0.362970532121034,0.4413888236447485,0.4773436935345835,0.5336610992301621,0.5353208949005293,0.5562397373482123,0.55799916252986,0.6224867975920083,0.7382855998994614,1.219253562375962,1.9525581396471208,2.1702549460687672,2.569836747870181,2.747560537779045,3.782354527691821,5.773898212100107,10.030680215258378,10.632871106536838],"xaxis":"x","y":["future_wind_day1_avg","future_pressure_day1_avg","future_pressure_day2_avg","future_humidity_day1_avg","future_wind_day1_max","aqi_rolling_mean_12h","aqi_lag_24h","aqi_change_rate_24h","pm25_rolling_mean_24h","future_humidity_day3_avg","future_temp_day3_avg","wind_speed_rolling_mean_24h","pressure_rolling_mean_24h","aqi_rolling_mean_24h","future_pressure_day3_avg","future_wind_direction_day3_avg","future_humidity_day2_avg","future_temp_day2_avg","future_temp_day1_avg","latitude"],"yaxis":"y","type":"bar"}],                        {"template":{"data":{"histogram2dcontour":[{"type":"histogram2dcontour","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"choropleth":[{"type":"choropleth","colorbar":{"outlinewidth":0,"ticks":""}}],"histogram2d":[{"type":"histogram2d","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"heatmap":[{"type":"heatmap","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"heatmapgl":[{"type":"heatmapgl","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"contourcarpet":[{"type":"contourcarpet","colorbar":{"outlinewidth":0,"ticks":""}}],"contour":[{"type":"contour","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"surface":[{"type":"surface","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"mesh3d":[{"type":"mesh3d","colorbar":{"outlinewidth":0,"ticks":""}}],"scatter":[{"fillpattern":{"fillmode":"overlay","size":10,"solidity":0.2},"type":"scatter"}],"parcoords":[{"type":"parcoords","line":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterpolargl":[{"type":"scatterpolargl","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"bar":[{"error_x":{"color":"#2a3f5f"},"error_y":{"color":"#2a3f5f"},"marker":{"line":{"color":"#E5ECF6","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"bar"}],"scattergeo":[{"type":"scattergeo","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterpolar":[{"type":"scatterpolar","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"histogram":[{"marker":{"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"histogram"}],"scattergl":[{"type":"scattergl","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatter3d":[{"type":"scatter3d","line":{"colorbar":{"outlinewidth":0,"ticks":""}},"marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scattermapbox":[{"type":"scattermapbox","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterternary":[{"type":"scatterternary","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scattercarpet":[{"type":"scattercarpet","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"carpet":[{"aaxis":{"endlinecolor":"#2a3f5f","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"#2a3f5f"},"baxis":{"endlinecolor":"#2a3f5f","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"#2a3f5f"},"type":"carpet"}],"table":[{"cells":{"fill":{"color":"#EBF0F8"},"line":{"color":"white"}},"header":{"fill":{"color":"#C8D4E3"},"line":{"color":"white"}},"type":"table"}],"barpolar":[{"marker":{"line":{"color":"#E5ECF6","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"barpolar"}],"pie":[{"automargin":true,"type":"pie"}]},"layout":{"autotypenumbers":"strict","colorway":["#636efa","#EF553B","#00cc96","#ab63fa","#FFA15A","#19d3f3","#FF6692","#B6E880","#FF97FF","#FECB52"],"font":{"color":"#2a3f5f"},"hovermode":"closest","hoverlabel":{"align":"left"},"paper_bgcolor":"white","plot_bgcolor":"#E5ECF6","polar":{"bgcolor":"#E5ECF6","angularaxis":{"gridcolor":"white","linecolor":"white","ticks":""},"radialaxis":{"gridcolor":"white","linecolor":"white","ticks":""}},"ternary":{"bgcolor":"#E5ECF6","aaxis":{"gridcolor":"white","linecolor":"white","ticks":""},"baxis":{"gridcolor":"white","linecolor":"white","ticks":""},"caxis":{"gridcolor":"white","linecolor":"white","ticks":""}},"coloraxis":{"colorbar":{"outlinewidth":0,"ticks":""}},"colorscale":{"sequential":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"sequentialminus":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"diverging":[[0,"#8e0152"],[0.1,"#c51b7d"],[0.2,"#de77ae"],[0.3,"#f1b6da"],[0.4,"#fde0ef"],[0.5,"#f7f7f7"],[0.6,"#e6f5d0"],[0.7,"#b8e186"],[0.8,"#7fbc41"],[0.9,"#4d9221"],[1,"#276419"]]},"xaxis":{"gridcolor":"white","linecolor":"white","ticks":"","title":{"standoff":15},"zerolinecolor":"white","automargin":true,"zerolinewidth":2},"yaxis":{"gridcolor":"white","linecolor":"white","ticks":"","title":{"standoff":15},"zerolinecolor":"white","automargin":true,"zerolinewidth":2},"scene":{"xaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2},"yaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2},"zaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2}},"shapedefaults":{"line":{"color":"#2a3f5f"}},"annotationdefaults":{"arrowcolor":"#2a3f5f","arrowhead":0,"arrowwidth":1},"geo":{"bgcolor":"white","landcolor":"#E5ECF6","subunitcolor":"white","showland":true,"showlakes":true,"lakecolor":"white"},"title":{"x":0.05},"mapbox":{"style":"light"}}},"xaxis":{"anchor":"y","domain":[0.0,1.0],"title":{"text":"mean_abs_shap"}},"yaxis":{"anchor":"x","domain":[0.0,1.0],"title":{"text":"feature"}},"coloraxis":{"colorbar":{"title":{"text":"mean_abs_shap"}},"colorscale":[[0.0,"#440154"],[0.1111111111111111,"#482878"],[0.2222222222222222,"#3e4989"],[0.3333333333333333,"#31688e"],[0.4444444444444444,"#26828e"],[0.5555555555555556,"#1f9e89"],[0.6666666666666666,"#35b779"],[0.7777777777777778,"#6ece58"],[0.8888888888888888,"#b5de2b"],[1.0,"#fde725"]]},"legend":{"tracegroupgap":0},"title":{"text":"SHAP Feature Impact for day_2","font":{"size":22,"color":"#0f172a"}},"barmode":"relative","font":{"color":"#0f172a","family":"Arial, sans-serif"},"margin":{"l":30,"r":30,"t":70,"b":40},"height":620,"plot_bgcolor":"#fffdf2","paper_bgcolor":"#fffdf2"},                        {"responsive": true}                    )                };                            </script>        </div>
+                    <table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>target</th>
+      <th>model_name</th>
+      <th>feature</th>
+      <th>mean_abs_shap</th>
+      <th>rows_explained</th>
+      <th>background_rows</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>day_2</td>
+      <td>hist_gradient_boosting</td>
+      <td>latitude</td>
+      <td>10.632871</td>
+      <td>120</td>
+      <td>60</td>
+    </tr>
+    <tr>
+      <td>day_2</td>
+      <td>hist_gradient_boosting</td>
+      <td>future_temp_day1_avg</td>
+      <td>10.030680</td>
+      <td>120</td>
+      <td>60</td>
+    </tr>
+    <tr>
+      <td>day_2</td>
+      <td>hist_gradient_boosting</td>
+      <td>future_temp_day2_avg</td>
+      <td>5.773898</td>
+      <td>120</td>
+      <td>60</td>
+    </tr>
+    <tr>
+      <td>day_2</td>
+      <td>hist_gradient_boosting</td>
+      <td>future_humidity_day2_avg</td>
+      <td>3.782355</td>
+      <td>120</td>
+      <td>60</td>
+    </tr>
+    <tr>
+      <td>day_2</td>
+      <td>hist_gradient_boosting</td>
+      <td>future_wind_direction_day3_avg</td>
+      <td>2.747561</td>
+      <td>120</td>
+      <td>60</td>
+    </tr>
+    <tr>
+      <td>day_2</td>
+      <td>hist_gradient_boosting</td>
+      <td>future_pressure_day3_avg</td>
+      <td>2.569837</td>
+      <td>120</td>
+      <td>60</td>
+    </tr>
+    <tr>
+      <td>day_2</td>
+      <td>hist_gradient_boosting</td>
+      <td>aqi_rolling_mean_24h</td>
+      <td>2.170255</td>
+      <td>120</td>
+      <td>60</td>
+    </tr>
+    <tr>
+      <td>day_2</td>
+      <td>hist_gradient_boosting</td>
+      <td>pressure_rolling_mean_24h</td>
+      <td>1.952558</td>
+      <td>120</td>
+      <td>60</td>
+    </tr>
+    <tr>
+      <td>day_2</td>
+      <td>hist_gradient_boosting</td>
+      <td>wind_speed_rolling_mean_24h</td>
+      <td>1.219254</td>
+      <td>120</td>
+      <td>60</td>
+    </tr>
+    <tr>
+      <td>day_2</td>
+      <td>hist_gradient_boosting</td>
+      <td>future_temp_day3_avg</td>
+      <td>0.738286</td>
+      <td>120</td>
+      <td>60</td>
+    </tr>
+    <tr>
+      <td>day_2</td>
+      <td>hist_gradient_boosting</td>
+      <td>future_humidity_day3_avg</td>
+      <td>0.622487</td>
+      <td>120</td>
+      <td>60</td>
+    </tr>
+    <tr>
+      <td>day_2</td>
+      <td>hist_gradient_boosting</td>
+      <td>pm25_rolling_mean_24h</td>
+      <td>0.557999</td>
+      <td>120</td>
+      <td>60</td>
+    </tr>
+    <tr>
+      <td>day_2</td>
+      <td>hist_gradient_boosting</td>
+      <td>aqi_change_rate_24h</td>
+      <td>0.556240</td>
+      <td>120</td>
+      <td>60</td>
+    </tr>
+    <tr>
+      <td>day_2</td>
+      <td>hist_gradient_boosting</td>
+      <td>aqi_lag_24h</td>
+      <td>0.535321</td>
+      <td>120</td>
+      <td>60</td>
+    </tr>
+    <tr>
+      <td>day_2</td>
+      <td>hist_gradient_boosting</td>
+      <td>aqi_rolling_mean_12h</td>
+      <td>0.533661</td>
+      <td>120</td>
+      <td>60</td>
+    </tr>
+    <tr>
+      <td>day_2</td>
+      <td>hist_gradient_boosting</td>
+      <td>future_wind_day1_max</td>
+      <td>0.477344</td>
+      <td>120</td>
+      <td>60</td>
+    </tr>
+    <tr>
+      <td>day_2</td>
+      <td>hist_gradient_boosting</td>
+      <td>future_humidity_day1_avg</td>
+      <td>0.441389</td>
+      <td>120</td>
+      <td>60</td>
+    </tr>
+    <tr>
+      <td>day_2</td>
+      <td>hist_gradient_boosting</td>
+      <td>future_pressure_day2_avg</td>
+      <td>0.362971</td>
+      <td>120</td>
+      <td>60</td>
+    </tr>
+    <tr>
+      <td>day_2</td>
+      <td>hist_gradient_boosting</td>
+      <td>future_pressure_day1_avg</td>
+      <td>0.350589</td>
+      <td>120</td>
+      <td>60</td>
+    </tr>
+    <tr>
+      <td>day_2</td>
+      <td>hist_gradient_boosting</td>
+      <td>future_wind_day1_avg</td>
+      <td>0.343219</td>
+      <td>120</td>
+      <td>60</td>
+    </tr>
+  </tbody>
+</table>
+                </div>
+                
+
+                <div class="card">
+                    <h2>SHAP Explanation: day_3</h2>
+                    <div>                        <script type="text/javascript">window.PlotlyConfig = {MathJaxConfig: 'local'};</script>
+        <script charset="utf-8" src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>                <div id="db9ddf37-e1a0-44b4-85fe-35eae22dc7d9" class="plotly-graph-div" style="height:620px; width:100%;"></div>            <script type="text/javascript">                                    window.PLOTLYENV=window.PLOTLYENV || {};                                    if (document.getElementById("db9ddf37-e1a0-44b4-85fe-35eae22dc7d9")) {                    Plotly.newPlot(                        "db9ddf37-e1a0-44b4-85fe-35eae22dc7d9",                        [{"alignmentgroup":"True","hovertemplate":"mean_abs_shap=%{marker.color}\u003cbr\u003efeature=%{y}\u003cextra\u003e\u003c\u002fextra\u003e","legendgroup":"","marker":{"color":[0.7106293070182859,0.7946538785390371,0.8052001982542423,0.9093543085288547,0.9285681801439092,1.0391446262883113,1.0851767760124318,1.1630086288333408,1.165147098627739,1.1730129560815359,1.3312536820643204,1.3908203990836623,1.5093489367169077,1.8529278118880819,2.1805155318741054,2.873970463070129,3.54532470542496,4.073717216226779,4.076939188532632,4.592875005132206],"coloraxis":"coloraxis","pattern":{"shape":""}},"name":"","offsetgroup":"","orientation":"h","showlegend":false,"textposition":"auto","x":[0.7106293070182859,0.7946538785390371,0.8052001982542423,0.9093543085288547,0.9285681801439092,1.0391446262883113,1.0851767760124318,1.1630086288333408,1.165147098627739,1.1730129560815359,1.3312536820643204,1.3908203990836623,1.5093489367169077,1.8529278118880819,2.1805155318741054,2.873970463070129,3.54532470542496,4.073717216226779,4.076939188532632,4.592875005132206],"xaxis":"x","y":["future_humidity_day3_avg","future_wind_direction_day3_avg","latitude","future_wind_day1_avg","aqi_rolling_mean_24h","future_wind_day2_max","future_humidity_day1_avg","pm10_rolling_mean_24h","future_pressure_day1_avg","future_wind_direction_day1_avg","dayofweek","future_temp_day1_avg","longitude","future_wind_day1_max","pressure_rolling_mean_24h","surface_pressure","future_humidity_day2_avg","future_temp_day2_avg","future_pressure_day2_avg","future_pressure_day3_avg"],"yaxis":"y","type":"bar"}],                        {"template":{"data":{"histogram2dcontour":[{"type":"histogram2dcontour","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"choropleth":[{"type":"choropleth","colorbar":{"outlinewidth":0,"ticks":""}}],"histogram2d":[{"type":"histogram2d","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"heatmap":[{"type":"heatmap","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"heatmapgl":[{"type":"heatmapgl","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"contourcarpet":[{"type":"contourcarpet","colorbar":{"outlinewidth":0,"ticks":""}}],"contour":[{"type":"contour","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"surface":[{"type":"surface","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"mesh3d":[{"type":"mesh3d","colorbar":{"outlinewidth":0,"ticks":""}}],"scatter":[{"fillpattern":{"fillmode":"overlay","size":10,"solidity":0.2},"type":"scatter"}],"parcoords":[{"type":"parcoords","line":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterpolargl":[{"type":"scatterpolargl","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"bar":[{"error_x":{"color":"#2a3f5f"},"error_y":{"color":"#2a3f5f"},"marker":{"line":{"color":"#E5ECF6","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"bar"}],"scattergeo":[{"type":"scattergeo","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterpolar":[{"type":"scatterpolar","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"histogram":[{"marker":{"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"histogram"}],"scattergl":[{"type":"scattergl","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatter3d":[{"type":"scatter3d","line":{"colorbar":{"outlinewidth":0,"ticks":""}},"marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scattermapbox":[{"type":"scattermapbox","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterternary":[{"type":"scatterternary","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scattercarpet":[{"type":"scattercarpet","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"carpet":[{"aaxis":{"endlinecolor":"#2a3f5f","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"#2a3f5f"},"baxis":{"endlinecolor":"#2a3f5f","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"#2a3f5f"},"type":"carpet"}],"table":[{"cells":{"fill":{"color":"#EBF0F8"},"line":{"color":"white"}},"header":{"fill":{"color":"#C8D4E3"},"line":{"color":"white"}},"type":"table"}],"barpolar":[{"marker":{"line":{"color":"#E5ECF6","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"barpolar"}],"pie":[{"automargin":true,"type":"pie"}]},"layout":{"autotypenumbers":"strict","colorway":["#636efa","#EF553B","#00cc96","#ab63fa","#FFA15A","#19d3f3","#FF6692","#B6E880","#FF97FF","#FECB52"],"font":{"color":"#2a3f5f"},"hovermode":"closest","hoverlabel":{"align":"left"},"paper_bgcolor":"white","plot_bgcolor":"#E5ECF6","polar":{"bgcolor":"#E5ECF6","angularaxis":{"gridcolor":"white","linecolor":"white","ticks":""},"radialaxis":{"gridcolor":"white","linecolor":"white","ticks":""}},"ternary":{"bgcolor":"#E5ECF6","aaxis":{"gridcolor":"white","linecolor":"white","ticks":""},"baxis":{"gridcolor":"white","linecolor":"white","ticks":""},"caxis":{"gridcolor":"white","linecolor":"white","ticks":""}},"coloraxis":{"colorbar":{"outlinewidth":0,"ticks":""}},"colorscale":{"sequential":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"sequentialminus":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"diverging":[[0,"#8e0152"],[0.1,"#c51b7d"],[0.2,"#de77ae"],[0.3,"#f1b6da"],[0.4,"#fde0ef"],[0.5,"#f7f7f7"],[0.6,"#e6f5d0"],[0.7,"#b8e186"],[0.8,"#7fbc41"],[0.9,"#4d9221"],[1,"#276419"]]},"xaxis":{"gridcolor":"white","linecolor":"white","ticks":"","title":{"standoff":15},"zerolinecolor":"white","automargin":true,"zerolinewidth":2},"yaxis":{"gridcolor":"white","linecolor":"white","ticks":"","title":{"standoff":15},"zerolinecolor":"white","automargin":true,"zerolinewidth":2},"scene":{"xaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2},"yaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2},"zaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2}},"shapedefaults":{"line":{"color":"#2a3f5f"}},"annotationdefaults":{"arrowcolor":"#2a3f5f","arrowhead":0,"arrowwidth":1},"geo":{"bgcolor":"white","landcolor":"#E5ECF6","subunitcolor":"white","showland":true,"showlakes":true,"lakecolor":"white"},"title":{"x":0.05},"mapbox":{"style":"light"}}},"xaxis":{"anchor":"y","domain":[0.0,1.0],"title":{"text":"mean_abs_shap"}},"yaxis":{"anchor":"x","domain":[0.0,1.0],"title":{"text":"feature"}},"coloraxis":{"colorbar":{"title":{"text":"mean_abs_shap"}},"colorscale":[[0.0,"#440154"],[0.1111111111111111,"#482878"],[0.2222222222222222,"#3e4989"],[0.3333333333333333,"#31688e"],[0.4444444444444444,"#26828e"],[0.5555555555555556,"#1f9e89"],[0.6666666666666666,"#35b779"],[0.7777777777777778,"#6ece58"],[0.8888888888888888,"#b5de2b"],[1.0,"#fde725"]]},"legend":{"tracegroupgap":0},"title":{"text":"SHAP Feature Impact for day_3","font":{"size":22,"color":"#0f172a"}},"barmode":"relative","font":{"color":"#0f172a","family":"Arial, sans-serif"},"margin":{"l":30,"r":30,"t":70,"b":40},"height":620,"plot_bgcolor":"#fffdf2","paper_bgcolor":"#fffdf2"},                        {"responsive": true}                    )                };                            </script>        </div>
+                    <table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>target</th>
+      <th>model_name</th>
+      <th>feature</th>
+      <th>mean_abs_shap</th>
+      <th>rows_explained</th>
+      <th>background_rows</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>day_3</td>
+      <td>extra_trees</td>
+      <td>future_pressure_day3_avg</td>
+      <td>4.592875</td>
+      <td>120</td>
+      <td>60</td>
+    </tr>
+    <tr>
+      <td>day_3</td>
+      <td>extra_trees</td>
+      <td>future_pressure_day2_avg</td>
+      <td>4.076939</td>
+      <td>120</td>
+      <td>60</td>
+    </tr>
+    <tr>
+      <td>day_3</td>
+      <td>extra_trees</td>
+      <td>future_temp_day2_avg</td>
+      <td>4.073717</td>
+      <td>120</td>
+      <td>60</td>
+    </tr>
+    <tr>
+      <td>day_3</td>
+      <td>extra_trees</td>
+      <td>future_humidity_day2_avg</td>
+      <td>3.545325</td>
+      <td>120</td>
+      <td>60</td>
+    </tr>
+    <tr>
+      <td>day_3</td>
+      <td>extra_trees</td>
+      <td>surface_pressure</td>
+      <td>2.873970</td>
+      <td>120</td>
+      <td>60</td>
+    </tr>
+    <tr>
+      <td>day_3</td>
+      <td>extra_trees</td>
+      <td>pressure_rolling_mean_24h</td>
+      <td>2.180516</td>
+      <td>120</td>
+      <td>60</td>
+    </tr>
+    <tr>
+      <td>day_3</td>
+      <td>extra_trees</td>
+      <td>future_wind_day1_max</td>
+      <td>1.852928</td>
+      <td>120</td>
+      <td>60</td>
+    </tr>
+    <tr>
+      <td>day_3</td>
+      <td>extra_trees</td>
+      <td>longitude</td>
+      <td>1.509349</td>
+      <td>120</td>
+      <td>60</td>
+    </tr>
+    <tr>
+      <td>day_3</td>
+      <td>extra_trees</td>
+      <td>future_temp_day1_avg</td>
+      <td>1.390820</td>
+      <td>120</td>
+      <td>60</td>
+    </tr>
+    <tr>
+      <td>day_3</td>
+      <td>extra_trees</td>
+      <td>dayofweek</td>
+      <td>1.331254</td>
+      <td>120</td>
+      <td>60</td>
+    </tr>
+    <tr>
+      <td>day_3</td>
+      <td>extra_trees</td>
+      <td>future_wind_direction_day1_avg</td>
+      <td>1.173013</td>
+      <td>120</td>
+      <td>60</td>
+    </tr>
+    <tr>
+      <td>day_3</td>
+      <td>extra_trees</td>
+      <td>future_pressure_day1_avg</td>
+      <td>1.165147</td>
+      <td>120</td>
+      <td>60</td>
+    </tr>
+    <tr>
+      <td>day_3</td>
+      <td>extra_trees</td>
+      <td>pm10_rolling_mean_24h</td>
+      <td>1.163009</td>
+      <td>120</td>
+      <td>60</td>
+    </tr>
+    <tr>
+      <td>day_3</td>
+      <td>extra_trees</td>
+      <td>future_humidity_day1_avg</td>
+      <td>1.085177</td>
+      <td>120</td>
+      <td>60</td>
+    </tr>
+    <tr>
+      <td>day_3</td>
+      <td>extra_trees</td>
+      <td>future_wind_day2_max</td>
+      <td>1.039145</td>
+      <td>120</td>
+      <td>60</td>
+    </tr>
+    <tr>
+      <td>day_3</td>
+      <td>extra_trees</td>
+      <td>aqi_rolling_mean_24h</td>
+      <td>0.928568</td>
+      <td>120</td>
+      <td>60</td>
+    </tr>
+    <tr>
+      <td>day_3</td>
+      <td>extra_trees</td>
+      <td>future_wind_day1_avg</td>
+      <td>0.909354</td>
+      <td>120</td>
+      <td>60</td>
+    </tr>
+    <tr>
+      <td>day_3</td>
+      <td>extra_trees</td>
+      <td>latitude</td>
+      <td>0.805200</td>
+      <td>120</td>
+      <td>60</td>
+    </tr>
+    <tr>
+      <td>day_3</td>
+      <td>extra_trees</td>
+      <td>future_wind_direction_day3_avg</td>
+      <td>0.794654</td>
+      <td>120</td>
+      <td>60</td>
+    </tr>
+    <tr>
+      <td>day_3</td>
+      <td>extra_trees</td>
+      <td>future_humidity_day3_avg</td>
+      <td>0.710629</td>
+      <td>120</td>
+      <td>60</td>
+    </tr>
+  </tbody>
+</table>
+                </div>
+                
+
+                <div class="card">
+                    <h2>SHAP Explanation: next_72h_avg</h2>
+                    <div>                        <script type="text/javascript">window.PlotlyConfig = {MathJaxConfig: 'local'};</script>
+        <script charset="utf-8" src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>                <div id="699a31d3-69a1-4503-9ab1-8f15acd4e88b" class="plotly-graph-div" style="height:620px; width:100%;"></div>            <script type="text/javascript">                                    window.PLOTLYENV=window.PLOTLYENV || {};                                    if (document.getElementById("699a31d3-69a1-4503-9ab1-8f15acd4e88b")) {                    Plotly.newPlot(                        "699a31d3-69a1-4503-9ab1-8f15acd4e88b",                        [{"alignmentgroup":"True","hovertemplate":"mean_abs_shap=%{marker.color}\u003cbr\u003efeature=%{y}\u003cextra\u003e\u003c\u002fextra\u003e","legendgroup":"","marker":{"color":[0.9586400260781378,1.0039648901549842,1.019854254610313,1.0510042782605822,1.1860120167717816,1.206387035654088,1.4794590069187543,1.4916292306267234,1.5630367151090592,1.789386032099973,1.8594523291381402,2.059026384845001,2.2235942975384964,2.378323143792749,2.4990723514488593,3.305081157031038,3.668343159111771,3.859714625265253,5.484805627565617,5.607759343409139],"coloraxis":"coloraxis","pattern":{"shape":""}},"name":"","offsetgroup":"","orientation":"h","showlegend":false,"textposition":"auto","x":[0.9586400260781378,1.0039648901549842,1.019854254610313,1.0510042782605822,1.1860120167717816,1.206387035654088,1.4794590069187543,1.4916292306267234,1.5630367151090592,1.789386032099973,1.8594523291381402,2.059026384845001,2.2235942975384964,2.378323143792749,2.4990723514488593,3.305081157031038,3.668343159111771,3.859714625265253,5.484805627565617,5.607759343409139],"xaxis":"x","y":["aqi_lag_1h","pm25_rolling_mean_24h","aqi_rolling_mean_6h","aqi_rolling_mean_3h","aqi_rolling_mean_24h","future_wind_day3_avg","aqi_lag_3h","aqi_lag_12h","future_humidity_day1_avg","aqi_rolling_mean_12h","us_aqi","future_humidity_day2_avg","future_temp_day2_avg","future_pressure_day3_avg","future_pressure_day1_avg","future_wind_direction_day3_avg","aqi_lag_24h","future_temp_day3_avg","future_temp_day1_avg","pm10_rolling_mean_24h"],"yaxis":"y","type":"bar"}],                        {"template":{"data":{"histogram2dcontour":[{"type":"histogram2dcontour","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"choropleth":[{"type":"choropleth","colorbar":{"outlinewidth":0,"ticks":""}}],"histogram2d":[{"type":"histogram2d","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"heatmap":[{"type":"heatmap","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"heatmapgl":[{"type":"heatmapgl","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"contourcarpet":[{"type":"contourcarpet","colorbar":{"outlinewidth":0,"ticks":""}}],"contour":[{"type":"contour","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"surface":[{"type":"surface","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"mesh3d":[{"type":"mesh3d","colorbar":{"outlinewidth":0,"ticks":""}}],"scatter":[{"fillpattern":{"fillmode":"overlay","size":10,"solidity":0.2},"type":"scatter"}],"parcoords":[{"type":"parcoords","line":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterpolargl":[{"type":"scatterpolargl","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"bar":[{"error_x":{"color":"#2a3f5f"},"error_y":{"color":"#2a3f5f"},"marker":{"line":{"color":"#E5ECF6","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"bar"}],"scattergeo":[{"type":"scattergeo","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterpolar":[{"type":"scatterpolar","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"histogram":[{"marker":{"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"histogram"}],"scattergl":[{"type":"scattergl","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatter3d":[{"type":"scatter3d","line":{"colorbar":{"outlinewidth":0,"ticks":""}},"marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scattermapbox":[{"type":"scattermapbox","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterternary":[{"type":"scatterternary","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scattercarpet":[{"type":"scattercarpet","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"carpet":[{"aaxis":{"endlinecolor":"#2a3f5f","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"#2a3f5f"},"baxis":{"endlinecolor":"#2a3f5f","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"#2a3f5f"},"type":"carpet"}],"table":[{"cells":{"fill":{"color":"#EBF0F8"},"line":{"color":"white"}},"header":{"fill":{"color":"#C8D4E3"},"line":{"color":"white"}},"type":"table"}],"barpolar":[{"marker":{"line":{"color":"#E5ECF6","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"barpolar"}],"pie":[{"automargin":true,"type":"pie"}]},"layout":{"autotypenumbers":"strict","colorway":["#636efa","#EF553B","#00cc96","#ab63fa","#FFA15A","#19d3f3","#FF6692","#B6E880","#FF97FF","#FECB52"],"font":{"color":"#2a3f5f"},"hovermode":"closest","hoverlabel":{"align":"left"},"paper_bgcolor":"white","plot_bgcolor":"#E5ECF6","polar":{"bgcolor":"#E5ECF6","angularaxis":{"gridcolor":"white","linecolor":"white","ticks":""},"radialaxis":{"gridcolor":"white","linecolor":"white","ticks":""}},"ternary":{"bgcolor":"#E5ECF6","aaxis":{"gridcolor":"white","linecolor":"white","ticks":""},"baxis":{"gridcolor":"white","linecolor":"white","ticks":""},"caxis":{"gridcolor":"white","linecolor":"white","ticks":""}},"coloraxis":{"colorbar":{"outlinewidth":0,"ticks":""}},"colorscale":{"sequential":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"sequentialminus":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"diverging":[[0,"#8e0152"],[0.1,"#c51b7d"],[0.2,"#de77ae"],[0.3,"#f1b6da"],[0.4,"#fde0ef"],[0.5,"#f7f7f7"],[0.6,"#e6f5d0"],[0.7,"#b8e186"],[0.8,"#7fbc41"],[0.9,"#4d9221"],[1,"#276419"]]},"xaxis":{"gridcolor":"white","linecolor":"white","ticks":"","title":{"standoff":15},"zerolinecolor":"white","automargin":true,"zerolinewidth":2},"yaxis":{"gridcolor":"white","linecolor":"white","ticks":"","title":{"standoff":15},"zerolinecolor":"white","automargin":true,"zerolinewidth":2},"scene":{"xaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2},"yaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2},"zaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2}},"shapedefaults":{"line":{"color":"#2a3f5f"}},"annotationdefaults":{"arrowcolor":"#2a3f5f","arrowhead":0,"arrowwidth":1},"geo":{"bgcolor":"white","landcolor":"#E5ECF6","subunitcolor":"white","showland":true,"showlakes":true,"lakecolor":"white"},"title":{"x":0.05},"mapbox":{"style":"light"}}},"xaxis":{"anchor":"y","domain":[0.0,1.0],"title":{"text":"mean_abs_shap"}},"yaxis":{"anchor":"x","domain":[0.0,1.0],"title":{"text":"feature"}},"coloraxis":{"colorbar":{"title":{"text":"mean_abs_shap"}},"colorscale":[[0.0,"#440154"],[0.1111111111111111,"#482878"],[0.2222222222222222,"#3e4989"],[0.3333333333333333,"#31688e"],[0.4444444444444444,"#26828e"],[0.5555555555555556,"#1f9e89"],[0.6666666666666666,"#35b779"],[0.7777777777777778,"#6ece58"],[0.8888888888888888,"#b5de2b"],[1.0,"#fde725"]]},"legend":{"tracegroupgap":0},"title":{"text":"SHAP Feature Impact for next_72h_avg","font":{"size":22,"color":"#0f172a"}},"barmode":"relative","font":{"color":"#0f172a","family":"Arial, sans-serif"},"margin":{"l":30,"r":30,"t":70,"b":40},"height":620,"plot_bgcolor":"#fffdf2","paper_bgcolor":"#fffdf2"},                        {"responsive": true}                    )                };                            </script>        </div>
+                    <table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>target</th>
+      <th>model_name</th>
+      <th>feature</th>
+      <th>mean_abs_shap</th>
+      <th>rows_explained</th>
+      <th>background_rows</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>next_72h_avg</td>
+      <td>gradient_boosting</td>
+      <td>pm10_rolling_mean_24h</td>
+      <td>5.607759</td>
+      <td>120</td>
+      <td>60</td>
+    </tr>
+    <tr>
+      <td>next_72h_avg</td>
+      <td>gradient_boosting</td>
+      <td>future_temp_day1_avg</td>
+      <td>5.484806</td>
+      <td>120</td>
+      <td>60</td>
+    </tr>
+    <tr>
+      <td>next_72h_avg</td>
+      <td>gradient_boosting</td>
+      <td>future_temp_day3_avg</td>
+      <td>3.859715</td>
+      <td>120</td>
+      <td>60</td>
+    </tr>
+    <tr>
+      <td>next_72h_avg</td>
+      <td>gradient_boosting</td>
+      <td>aqi_lag_24h</td>
+      <td>3.668343</td>
+      <td>120</td>
+      <td>60</td>
+    </tr>
+    <tr>
+      <td>next_72h_avg</td>
+      <td>gradient_boosting</td>
+      <td>future_wind_direction_day3_avg</td>
+      <td>3.305081</td>
+      <td>120</td>
+      <td>60</td>
+    </tr>
+    <tr>
+      <td>next_72h_avg</td>
+      <td>gradient_boosting</td>
+      <td>future_pressure_day1_avg</td>
+      <td>2.499072</td>
+      <td>120</td>
+      <td>60</td>
+    </tr>
+    <tr>
+      <td>next_72h_avg</td>
+      <td>gradient_boosting</td>
+      <td>future_pressure_day3_avg</td>
+      <td>2.378323</td>
+      <td>120</td>
+      <td>60</td>
+    </tr>
+    <tr>
+      <td>next_72h_avg</td>
+      <td>gradient_boosting</td>
+      <td>future_temp_day2_avg</td>
+      <td>2.223594</td>
+      <td>120</td>
+      <td>60</td>
+    </tr>
+    <tr>
+      <td>next_72h_avg</td>
+      <td>gradient_boosting</td>
+      <td>future_humidity_day2_avg</td>
+      <td>2.059026</td>
+      <td>120</td>
+      <td>60</td>
+    </tr>
+    <tr>
+      <td>next_72h_avg</td>
+      <td>gradient_boosting</td>
+      <td>us_aqi</td>
+      <td>1.859452</td>
+      <td>120</td>
+      <td>60</td>
+    </tr>
+    <tr>
+      <td>next_72h_avg</td>
+      <td>gradient_boosting</td>
+      <td>aqi_rolling_mean_12h</td>
+      <td>1.789386</td>
+      <td>120</td>
+      <td>60</td>
+    </tr>
+    <tr>
+      <td>next_72h_avg</td>
+      <td>gradient_boosting</td>
+      <td>future_humidity_day1_avg</td>
+      <td>1.563037</td>
+      <td>120</td>
+      <td>60</td>
+    </tr>
+    <tr>
+      <td>next_72h_avg</td>
+      <td>gradient_boosting</td>
+      <td>aqi_lag_12h</td>
+      <td>1.491629</td>
+      <td>120</td>
+      <td>60</td>
+    </tr>
+    <tr>
+      <td>next_72h_avg</td>
+      <td>gradient_boosting</td>
+      <td>aqi_lag_3h</td>
+      <td>1.479459</td>
+      <td>120</td>
+      <td>60</td>
+    </tr>
+    <tr>
+      <td>next_72h_avg</td>
+      <td>gradient_boosting</td>
+      <td>future_wind_day3_avg</td>
+      <td>1.206387</td>
+      <td>120</td>
+      <td>60</td>
+    </tr>
+    <tr>
+      <td>next_72h_avg</td>
+      <td>gradient_boosting</td>
+      <td>aqi_rolling_mean_24h</td>
+      <td>1.186012</td>
+      <td>120</td>
+      <td>60</td>
+    </tr>
+    <tr>
+      <td>next_72h_avg</td>
+      <td>gradient_boosting</td>
+      <td>aqi_rolling_mean_3h</td>
+      <td>1.051004</td>
+      <td>120</td>
+      <td>60</td>
+    </tr>
+    <tr>
+      <td>next_72h_avg</td>
+      <td>gradient_boosting</td>
+      <td>aqi_rolling_mean_6h</td>
+      <td>1.019854</td>
+      <td>120</td>
+      <td>60</td>
+    </tr>
+    <tr>
+      <td>next_72h_avg</td>
+      <td>gradient_boosting</td>
+      <td>pm25_rolling_mean_24h</td>
+      <td>1.003965</td>
+      <td>120</td>
+      <td>60</td>
+    </tr>
+    <tr>
+      <td>next_72h_avg</td>
+      <td>gradient_boosting</td>
+      <td>aqi_lag_1h</td>
+      <td>0.958640</td>
+      <td>120</td>
+      <td>60</td>
+    </tr>
+  </tbody>
+</table>
+                </div>
+                
+        </div>
+    </body>
+    </html>
+    

@@ -1,22 +1,36 @@
 import json
-from datetime import datetime
+from datetime import datetime, timezone
 from pathlib import Path
 
 import joblib
+import numpy as np
 import pandas as pd
 import plotly.express as px
 import plotly.io as pio
 from sklearn.inspection import permutation_importance
+
+try:
+    import shap
+
+    SHAP_AVAILABLE = True
+except Exception:
+    shap = None
+    SHAP_AVAILABLE = False
 
 from config import FEATURE_COLUMNS, FEATURE_STORE_PATH, MODEL_PATH, METRICS_PATH
 from hopsworks_store import load_features_from_hopsworks
 
 
 REPORTS_DIR = Path("reports")
+
 EDA_HTML_PATH = REPORTS_DIR / "eda_report.html"
 EDA_SUMMARY_JSON_PATH = REPORTS_DIR / "eda_summary.json"
+
 EXPLAINABILITY_HTML_PATH = REPORTS_DIR / "explainability_report.html"
 EXPLAINABILITY_CSV_PATH = REPORTS_DIR / "feature_importance.csv"
+
+SHAP_HTML_PATH = REPORTS_DIR / "shap_report.html"
+SHAP_CSV_PATH = REPORTS_DIR / "shap_feature_importance.csv"
 
 
 CITY_MAP = {
@@ -59,14 +73,31 @@ def make_json_safe(value):
     if isinstance(value, datetime):
         return value.isoformat()
 
-    if pd.isna(value) if not isinstance(value, (list, dict, tuple)) else False:
-        return None
+    if isinstance(value, np.integer):
+        return int(value)
+
+    if isinstance(value, np.floating):
+        if np.isnan(value):
+            return None
+        return float(value)
+
+    if isinstance(value, np.ndarray):
+        return value.tolist()
 
     if isinstance(value, dict):
         return {key: make_json_safe(item) for key, item in value.items()}
 
     if isinstance(value, list):
         return [make_json_safe(item) for item in value]
+
+    if isinstance(value, tuple):
+        return [make_json_safe(item) for item in value]
+
+    try:
+        if pd.isna(value):
+            return None
+    except Exception:
+        pass
 
     if hasattr(value, "item"):
         try:
@@ -90,7 +121,10 @@ def create_city_column(df: pd.DataFrame) -> pd.DataFrame:
 
     if "city" in df.columns:
         df["city"] = df["city"].astype(str)
-        df["city"] = df["city"].replace(["None", "none", "nan", "NaN", "NULL", "null", ""], pd.NA)
+        df["city"] = df["city"].replace(
+            ["None", "none", "nan", "NaN", "NULL", "null", ""],
+            pd.NA,
+        )
         df["city"] = df["city"].fillna(mapped_city)
     else:
         df["city"] = mapped_city
@@ -129,13 +163,13 @@ def load_feature_data() -> tuple[pd.DataFrame, str]:
 
 def load_model_bundle():
     if not MODEL_PATH.exists():
-        print("Model file not found. Explainability report will be skipped.")
+        print("Model file not found. Explainability and SHAP reports will be skipped.")
         return None
 
     bundle = joblib.load(MODEL_PATH)
 
     if not isinstance(bundle, dict) or "models" not in bundle:
-        print("Old model format found. Explainability report will be skipped.")
+        print("Old model format found. Explainability and SHAP reports will be skipped.")
         return None
 
     return bundle
@@ -145,19 +179,22 @@ def load_metrics():
     if not METRICS_PATH.exists():
         return None
 
-    with open(METRICS_PATH, "r") as file:
+    with open(METRICS_PATH, "r", encoding="utf-8") as file:
         return json.load(file)
 
 
 def safe_round(value, decimals=2):
-    if pd.isna(value):
+    try:
+        if pd.isna(value):
+            return None
+    except Exception:
         return None
 
     return round(float(value), decimals)
 
 
 def write_html_report(title: str, sections: list[str], output_path: Path):
-    generated_at = datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S UTC")
+    generated_at = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S UTC")
     body = "\n".join(sections)
 
     html = f"""
@@ -249,6 +286,17 @@ def write_html_report(title: str, sections: list[str], output_path: Path):
                 background: #eff6ff;
                 color: #1e40af;
                 border: 1px solid #bfdbfe;
+                border-radius: 18px;
+                padding: 16px;
+                font-weight: 700;
+                line-height: 1.55;
+                margin-bottom: 24px;
+            }}
+
+            .warning {{
+                background: #fff7ed;
+                color: #9a3412;
+                border: 1px solid #fed7aa;
                 border-radius: 18px;
                 padding: 16px;
                 font-weight: 700;
@@ -366,7 +414,11 @@ def generate_eda_report(df: pd.DataFrame, data_source: str):
     available_pollutants = [col for col in POLLUTANT_COLUMNS if col in df.columns]
     available_targets = [col for col in TARGET_COLUMNS.values() if col in df.columns]
 
-    trend_df = df.groupby([pd.Grouper(key="time", freq="D"), "city"])["us_aqi"].mean().reset_index()
+    trend_df = (
+        df.groupby([pd.Grouper(key="time", freq="D"), "city"])["us_aqi"]
+        .mean()
+        .reset_index()
+    )
 
     trend_fig = px.line(
         trend_df,
@@ -550,7 +602,10 @@ def generate_eda_report(df: pd.DataFrame, data_source: str):
         .rename(columns={"index": "column", 0: "missing_values"})
     )
 
-    missing_summary["missing_percent"] = ((missing_summary["missing_values"] / len(df)) * 100).round(2)
+    missing_summary["missing_percent"] = (
+        (missing_summary["missing_values"] / len(df)) * 100
+    ).round(2)
+
     missing_summary = missing_summary[missing_summary["missing_values"] > 0].sort_values(
         "missing_values",
         ascending=False,
@@ -571,7 +626,7 @@ def generate_eda_report(df: pd.DataFrame, data_source: str):
     )
 
     summary = {
-        "generated_at_utc": datetime.utcnow().isoformat(),
+        "generated_at_utc": datetime.now(timezone.utc).isoformat(),
         "data_source": data_source,
         "rows": int(total_rows),
         "cities": int(total_cities),
@@ -603,7 +658,11 @@ def generate_eda_report(df: pd.DataFrame, data_source: str):
 
 def get_feature_importance_from_model(model, X_sample, y_sample):
     try:
-        estimator = model.named_steps["model"] if hasattr(model, "named_steps") and "model" in model.named_steps else model
+        estimator = (
+            model.named_steps["model"]
+            if hasattr(model, "named_steps") and "model" in model.named_steps
+            else model
+        )
 
         if hasattr(estimator, "feature_importances_"):
             values = estimator.feature_importances_
@@ -611,11 +670,13 @@ def get_feature_importance_from_model(model, X_sample, y_sample):
             if hasattr(values, "ravel"):
                 values = values.ravel()
 
-            return pd.DataFrame({
-                "feature": FEATURE_COLUMNS,
-                "importance": values,
-                "method": "model_feature_importance",
-            })
+            return pd.DataFrame(
+                {
+                    "feature": FEATURE_COLUMNS,
+                    "importance": values,
+                    "method": "model_feature_importance",
+                }
+            )
 
         if hasattr(estimator, "coef_"):
             values = abs(estimator.coef_)
@@ -623,11 +684,13 @@ def get_feature_importance_from_model(model, X_sample, y_sample):
             if hasattr(values, "ravel"):
                 values = values.ravel()
 
-            return pd.DataFrame({
-                "feature": FEATURE_COLUMNS,
-                "importance": values,
-                "method": "model_coefficients",
-            })
+            return pd.DataFrame(
+                {
+                    "feature": FEATURE_COLUMNS,
+                    "importance": values,
+                    "method": "model_coefficients",
+                }
+            )
 
         result = permutation_importance(
             model,
@@ -638,11 +701,13 @@ def get_feature_importance_from_model(model, X_sample, y_sample):
             scoring="neg_mean_absolute_error",
         )
 
-        return pd.DataFrame({
-            "feature": FEATURE_COLUMNS,
-            "importance": abs(result.importances_mean),
-            "method": "permutation_importance",
-        })
+        return pd.DataFrame(
+            {
+                "feature": FEATURE_COLUMNS,
+                "importance": abs(result.importances_mean),
+                "method": "permutation_importance",
+            }
+        )
 
     except Exception as error:
         print("Feature importance failed:", error)
@@ -706,8 +771,8 @@ def generate_explainability_report(df: pd.DataFrame, model_bundle, metrics):
         """
         <div class="note">
             This report explains which features influenced the AQI forecasting models the most.
-            If the model supports native feature importance, that method is used.
-            Otherwise, permutation importance is used as a model-agnostic explainability method.
+            It uses model-native feature importance where available and permutation importance as fallback.
+            SHAP report is generated separately in <b>shap_report.html</b>.
         </div>
         """
     )
@@ -768,6 +833,214 @@ def generate_explainability_report(df: pd.DataFrame, model_bundle, metrics):
     print(f"Feature importance CSV saved to: {EXPLAINABILITY_CSV_PATH}")
 
 
+def calculate_shap_importance(model, X_background: pd.DataFrame, X_explain: pd.DataFrame):
+    if not SHAP_AVAILABLE:
+        raise ImportError("SHAP is not installed.")
+
+    masker = shap.maskers.Independent(X_background, max_samples=min(60, len(X_background)))
+
+    explainer = shap.Explainer(
+        model.predict,
+        masker,
+        feature_names=list(X_explain.columns),
+    )
+
+    shap_values = explainer(X_explain)
+
+    values = shap_values.values
+
+    if isinstance(values, list):
+        values = values[0]
+
+    values = np.asarray(values)
+
+    if values.ndim == 3:
+        values = values[:, :, 0]
+
+    mean_abs_values = np.abs(values).mean(axis=0)
+
+    return pd.DataFrame(
+        {
+            "feature": list(X_explain.columns),
+            "mean_abs_shap": mean_abs_values,
+        }
+    ).sort_values("mean_abs_shap", ascending=False)
+
+
+def generate_shap_report(df: pd.DataFrame, model_bundle):
+    print("Generating SHAP report...")
+
+    if not SHAP_AVAILABLE:
+        warning_section = """
+        <div class="warning">
+            SHAP package is not installed in this environment.
+            Install it using <b>pip install shap==0.46.0</b> and rerun the report.
+        </div>
+        """
+
+        write_html_report(
+            title="AQI SHAP Explainability Report",
+            sections=[warning_section],
+            output_path=SHAP_HTML_PATH,
+        )
+
+        print("SHAP is not available. SHAP report generated with warning only.")
+        return
+
+    if model_bundle is None:
+        warning_section = """
+        <div class="warning">
+            Model bundle is not available, so SHAP values could not be calculated.
+            Run the training pipeline first.
+        </div>
+        """
+
+        write_html_report(
+            title="AQI SHAP Explainability Report",
+            sections=[warning_section],
+            output_path=SHAP_HTML_PATH,
+        )
+
+        print("Skipping SHAP report because model bundle is not available.")
+        return
+
+    all_shap_frames = []
+    sections = []
+
+    sections.append(
+        """
+        <div class="note">
+            SHAP explains how much each feature contributes to the model prediction.
+            Higher mean absolute SHAP values mean the feature has stronger influence on the AQI forecast.
+            To keep runtime safe in local and GitHub Actions environments, SHAP is calculated on a recent sample of rows.
+        </div>
+        """
+    )
+
+    for target_key, target_column in TARGET_COLUMNS.items():
+        if target_key not in model_bundle.get("models", {}):
+            print(f"Skipping SHAP for {target_key}: model not found.")
+            continue
+
+        if target_column not in df.columns:
+            print(f"Skipping SHAP for {target_key}: target column not found.")
+            continue
+
+        clean_df = df.dropna(subset=FEATURE_COLUMNS + [target_column]).copy()
+
+        if len(clean_df) < 80:
+            print(f"Skipping SHAP for {target_key}: not enough clean rows.")
+            continue
+
+        clean_df = clean_df.tail(500)
+
+        background_size = min(60, len(clean_df))
+        explain_size = min(120, len(clean_df))
+
+        background_df = clean_df.sample(
+            n=background_size,
+            random_state=42,
+        )
+
+        explain_df = clean_df.tail(explain_size)
+
+        X_background = background_df[FEATURE_COLUMNS]
+        X_explain = explain_df[FEATURE_COLUMNS]
+
+        model_info = model_bundle["models"][target_key]
+        model = model_info["model"]
+        model_name = model_info.get("model_name", "unknown_model")
+
+        try:
+            shap_importance = calculate_shap_importance(
+                model=model,
+                X_background=X_background,
+                X_explain=X_explain,
+            )
+
+            shap_importance["target"] = target_key
+            shap_importance["target_column"] = target_column
+            shap_importance["model_name"] = model_name
+            shap_importance["rows_explained"] = len(X_explain)
+            shap_importance["background_rows"] = len(X_background)
+
+            all_shap_frames.append(shap_importance)
+
+            top_shap = shap_importance.head(20).copy()
+
+            fig = px.bar(
+                top_shap.sort_values("mean_abs_shap", ascending=True),
+                x="mean_abs_shap",
+                y="feature",
+                orientation="h",
+                title=f"SHAP Feature Impact for {target_key}",
+                color="mean_abs_shap",
+                color_continuous_scale="Viridis",
+            )
+            fig = style_fig(fig, height=620)
+
+            table_df = top_shap[
+                [
+                    "target",
+                    "model_name",
+                    "feature",
+                    "mean_abs_shap",
+                    "rows_explained",
+                    "background_rows",
+                ]
+            ].copy()
+
+            table_df["mean_abs_shap"] = table_df["mean_abs_shap"].round(6)
+
+            sections.append(
+                f"""
+                <div class="card">
+                    <h2>SHAP Explanation: {target_key}</h2>
+                    {plot_to_html(fig)}
+                    {table_df.to_html(index=False)}
+                </div>
+                """
+            )
+
+            print(f"SHAP completed for {target_key}.")
+
+        except Exception as error:
+            error_message = str(error)
+
+            sections.append(
+                f"""
+                <div class="warning">
+                    <b>SHAP failed for {target_key}</b><br>
+                    Model: {model_name}<br>
+                    Error: {error_message}
+                </div>
+                """
+            )
+
+            print(f"SHAP failed for {target_key}: {error}")
+
+    if all_shap_frames:
+        full_shap_df = pd.concat(all_shap_frames, ignore_index=True)
+        full_shap_df.to_csv(SHAP_CSV_PATH, index=False)
+        print(f"SHAP CSV saved to: {SHAP_CSV_PATH}")
+    else:
+        sections.append(
+            """
+            <div class="warning">
+                No SHAP values were generated. Check model availability, clean rows, and SHAP installation.
+            </div>
+            """
+        )
+
+    write_html_report(
+        title="AQI SHAP Explainability Report",
+        sections=sections,
+        output_path=SHAP_HTML_PATH,
+    )
+
+    print(f"SHAP HTML report saved to: {SHAP_HTML_PATH}")
+
+
 def main():
     ensure_directories()
 
@@ -776,13 +1049,19 @@ def main():
     metrics = load_metrics()
 
     generate_eda_report(df=df, data_source=data_source)
+
     generate_explainability_report(
         df=df,
         model_bundle=model_bundle,
         metrics=metrics,
     )
 
-    print("EDA and explainability reports completed.")
+    generate_shap_report(
+        df=df,
+        model_bundle=model_bundle,
+    )
+
+    print("EDA, explainability, and SHAP reports completed.")
 
 
 if __name__ == "__main__":
