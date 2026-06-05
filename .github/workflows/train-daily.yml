@@ -2,25 +2,63 @@ name: Training pipeline daily
 
 on:
   schedule:
-    - cron: "0 2 * * *"
+    - cron: "37 22 * * *"
   workflow_dispatch:
 
 jobs:
   training-pipeline:
     runs-on: ubuntu-latest
+    timeout-minutes: 90
+
     permissions:
       contents: write
+
+    env:
+      HOPSWORKS_API_KEY: ${{ secrets.HOPSWORKS_API_KEY }}
+      HOPSWORKS_PROJECT_NAME: ${{ secrets.HOPSWORKS_PROJECT_NAME }}
+      USE_HOPSWORKS: "true"
+      TMP: "/tmp"
+      TEMP: "/tmp"
+
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - name: Run actions/checkout@v4
+        uses: actions/checkout@v4
+
+      - name: Run actions/setup-python@v5
+        uses: actions/setup-python@v5
         with:
-          python-version: "3.11"
-      - run: pip install -r requirements.txt
-      - run: python src/training_pipeline.py
-      - name: Commit updated model registry
+          python-version: "3.12"
+          cache: "pip"
+
+      - name: Run pip install -r requirements.txt
         run: |
-          git config user.name "github-actions"
-          git config user.email "actions@github.com"
-          git add models/aqi_model.joblib models/metrics.json || true
-          git commit -m "Train AQI model" || echo "No changes"
-          git push || true
+          python -m pip install --upgrade pip setuptools wheel
+          pip install -r requirements.txt
+
+      - name: Run python src/training_pipeline.py
+        run: |
+          python src/training_pipeline.py
+
+      - name: Commit updated model files
+        if: always()
+        run: |
+          git config --global user.name "github-actions"
+          git config --global user.email "github-actions@github.com"
+          git add models/aqi_model.joblib || true
+          git add models/metrics.json || true
+          git add reports/*.csv || true
+          git add reports/*.json || true
+          git commit -m "Update trained AQI model from daily pipeline" || echo "No model changes to commit"
+          git push || echo "No changes pushed"
+
+      - name: Upload trained model artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: trained-model
+          path: |
+            models/aqi_model.joblib
+            models/metrics.json
+            reports/
+          if-no-files-found: warn
+          retention-days: 14
