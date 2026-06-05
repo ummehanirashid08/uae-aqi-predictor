@@ -35,7 +35,7 @@ jobs:
           python -m pip install --upgrade pip setuptools wheel
           pip install -r requirements.txt
 
-      - name: Run EDA and explainability reports
+      - name: Run EDA, explainability, and SHAP reports
         run: |
           python src/eda_report.py
 
@@ -48,7 +48,9 @@ jobs:
           git add reports/eda_summary.json || true
           git add reports/explainability_report.html || true
           git add reports/feature_importance.csv || true
-          git commit -m "Update EDA and explainability reports" || echo "No report changes to commit"
+          git add reports/shap_report.html || true
+          git add reports/shap_feature_importance.csv || true
+          git commit -m "Update EDA explainability and SHAP reports" || echo "No report changes to commit"
           git push || echo "No changes pushed"
 
       - name: Upload reports artifact
@@ -61,5 +63,7 @@ jobs:
             reports/eda_summary.json
             reports/explainability_report.html
             reports/feature_importance.csv
+            reports/shap_report.html
+            reports/shap_feature_importance.csv
           if-no-files-found: warn
           retention-days: 30
