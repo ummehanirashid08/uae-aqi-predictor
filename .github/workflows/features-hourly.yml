@@ -2,25 +2,58 @@ name: Feature pipeline hourly
 
 on:
   schedule:
-    - cron: "0 * * * *"
+    - cron: "17 * * * *"
   workflow_dispatch:
 
 jobs:
   feature-pipeline:
     runs-on: ubuntu-latest
+    timeout-minutes: 60
+
     permissions:
       contents: write
+
+    env:
+      HOPSWORKS_API_KEY: ${{ secrets.HOPSWORKS_API_KEY }}
+      HOPSWORKS_PROJECT_NAME: ${{ secrets.HOPSWORKS_PROJECT_NAME }}
+      USE_HOPSWORKS: "true"
+      TMP: "/tmp"
+      TEMP: "/tmp"
+
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Run actions/setup-python@v5
+        uses: actions/setup-python@v5
         with:
-          python-version: "3.11"
-      - run: pip install -r requirements.txt
-      - run: python src/feature_pipeline.py --latitude 25.2048 --longitude 55.2708 --timezone Asia/Dubai --past-days 10 --forecast-days 3
-      - name: Commit updated feature store
+          python-version: "3.12"
+          cache: "pip"
+
+      - name: Run pip install -r requirements.txt
         run: |
-          git config user.name "github-actions"
-          git config user.email "actions@github.com"
+          python -m pip install --upgrade pip setuptools wheel
+          pip install -r requirements.txt
+
+      - name: Run python src/feature_pipeline.py
+        run: |
+          python src/feature_pipeline.py --past-days 10
+
+      - name: Commit updated feature store
+        if: always()
+        run: |
+          git config --global user.name "github-actions"
+          git config --global user.email "github-actions@github.com"
+          git add data/.gitkeep models/.gitkeep reports/.gitkeep || true
           git add data/feature_store.parquet || true
-          git commit -m "Update feature store" || echo "No changes"
-          git push || true
+          git commit -m "Update feature store from hourly pipeline" || echo "No feature store changes to commit"
+          git push || echo "No changes pushed"
+
+      - name: Upload feature store artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: feature-store-backup
+          path: data/feature_store.parquet
+          if-no-files-found: warn
+          retention-days: 7
