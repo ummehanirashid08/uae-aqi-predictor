@@ -1,0 +1,75 @@
+{
+    "generated_at_utc": "2026-06-05T16:00:51.700779",
+    "data_source": "Hopsworks Feature Store",
+    "rows": 105264,
+    "cities": 6,
+    "time_min": "2024-06-08 00:00:00+00:00",
+    "time_max": "2026-06-08 23:00:00+00:00",
+    "average_aqi": 122.633,
+    "max_aqi": 1244.0,
+    "city_summary": [
+        {
+            "city": "Al Ain",
+            "rows": 17544,
+            "avg_aqi": 169.33,
+            "max_aqi": 1244,
+            "min_aqi": 34,
+            "latest_time": "2026-06-08 23:00:00+00:00"
+        },
+        {
+            "city": "Sharjah",
+            "rows": 17544,
+            "avg_aqi": 118.7,
+            "max_aqi": 441,
+            "min_aqi": 48,
+            "latest_time": "2026-06-08 23:00:00+00:00"
+        },
+        {
+            "city": "Dubai",
+            "rows": 17544,
+            "avg_aqi": 118.6,
+            "max_aqi": 252,
+            "min_aqi": 48,
+            "latest_time": "2026-06-08 23:00:00+00:00"
+        },
+        {
+            "city": "Ajman",
+            "rows": 17544,
+            "avg_aqi": 117.94,
+            "max_aqi": 284,
+            "min_aqi": 48,
+            "latest_time": "2026-06-08 23:00:00+00:00"
+        },
+        {
+            "city": "Abu Dhabi",
+            "rows": 17544,
+            "avg_aqi": 110.01,
+            "max_aqi": 280,
+            "min_aqi": 45,
+            "latest_time": "2026-06-08 23:00:00+00:00"
+        },
+        {
+            "city": "Ras Al Khaimah",
+            "rows": 17544,
+            "avg_aqi": 101.21,
+            "max_aqi": 286,
+            "min_aqi": 34,
+            "latest_time": "2026-06-08 23:00:00+00:00"
+        }
+    ],
+    "available_pollutants": [
+        "pm2_5",
+        "pm10",
+        "carbon_monoxide",
+        "nitrogen_dioxide",
+        "sulphur_dioxide",
+        "ozone",
+        "dust"
+    ],
+    "available_targets": [
+        "target_aqi_day1_avg",
+        "target_aqi_day2_avg",
+        "target_aqi_day3_avg",
+        "target_aqi_next_72h_avg"
+    ]
+}

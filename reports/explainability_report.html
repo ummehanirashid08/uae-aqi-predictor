@@ -1,0 +1,1037 @@
+
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <meta charset="utf-8">
+        <title>AQI Model Explainability Report</title>
+        <style>
+            body {
+                margin: 0;
+                padding: 0;
+                background: #f8fafc;
+                font-family: Arial, sans-serif;
+                color: #0f172a;
+            }
+
+            .container {
+                max-width: 1180px;
+                margin: 0 auto;
+                padding: 34px 24px 60px;
+            }
+
+            .hero {
+                background: linear-gradient(135deg, #fff8d8 0%, #facc15 100%);
+                border: 1px solid #fde68a;
+                border-radius: 28px;
+                padding: 34px;
+                box-shadow: 0 18px 40px rgba(15, 23, 42, 0.08);
+                margin-bottom: 24px;
+            }
+
+            .hero h1 {
+                margin: 0 0 10px;
+                font-size: 38px;
+                letter-spacing: -1px;
+            }
+
+            .hero p {
+                margin: 0;
+                color: #475569;
+                font-size: 16px;
+                font-weight: 700;
+            }
+
+            .card {
+                background: #fffdf2;
+                border: 1px solid #f3e8a2;
+                border-radius: 24px;
+                padding: 24px;
+                box-shadow: 0 14px 34px rgba(15, 23, 42, 0.06);
+                margin-bottom: 24px;
+            }
+
+            .grid {
+                display: grid;
+                grid-template-columns: repeat(4, 1fr);
+                gap: 16px;
+                margin-bottom: 24px;
+            }
+
+            .metric {
+                background: white;
+                border: 1px solid #e5e7eb;
+                border-radius: 18px;
+                padding: 18px;
+            }
+
+            .metric-title {
+                color: #64748b;
+                font-size: 13px;
+                font-weight: 800;
+                margin-bottom: 8px;
+            }
+
+            .metric-value {
+                font-size: 28px;
+                font-weight: 900;
+                color: #0f172a;
+            }
+
+            h2 {
+                font-size: 26px;
+                margin: 0 0 16px;
+                letter-spacing: -0.7px;
+            }
+
+            .note {
+                background: #eff6ff;
+                color: #1e40af;
+                border: 1px solid #bfdbfe;
+                border-radius: 18px;
+                padding: 16px;
+                font-weight: 700;
+                line-height: 1.55;
+                margin-bottom: 24px;
+            }
+
+            table {
+                width: 100%;
+                border-collapse: collapse;
+                background: white;
+                border-radius: 16px;
+                overflow: hidden;
+            }
+
+            th, td {
+                text-align: left;
+                border-bottom: 1px solid #e5e7eb;
+                padding: 12px 14px;
+                font-size: 14px;
+            }
+
+            th {
+                background: #f1f5f9;
+                font-weight: 900;
+                color: #334155;
+            }
+
+            pre {
+                white-space: pre-wrap;
+                background: #0f172a;
+                color: #e5e7eb;
+                border-radius: 18px;
+                padding: 18px;
+                overflow-x: auto;
+            }
+
+            @media (max-width: 900px) {
+                .grid {
+                    grid-template-columns: repeat(2, 1fr);
+                }
+            }
+
+            @media (max-width: 600px) {
+                .grid {
+                    grid-template-columns: 1fr;
+                }
+
+                .hero h1 {
+                    font-size: 30px;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <div class="hero">
+                <h1>AQI Model Explainability Report</h1>
+                <p>Generated automatically on 2026-06-05 16:00:56 UTC</p>
+            </div>
+            
+        <div class="note">
+            This report explains which features influenced the AQI forecasting models the most.
+            If the model supports native feature importance, that method is used.
+            Otherwise, permutation importance is used as a model-agnostic explainability method.
+        </div>
+        
+
+            <div class="card">
+                <h2>Explainability: day_1</h2>
+                <div>                        <script type="text/javascript">window.PlotlyConfig = {MathJaxConfig: 'local'};</script>
+        <script charset="utf-8" src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>                <div id="a47fd0fd-c87d-405d-9345-5f6ae6594267" class="plotly-graph-div" style="height:620px; width:100%;"></div>            <script type="text/javascript">                                    window.PLOTLYENV=window.PLOTLYENV || {};                                    if (document.getElementById("a47fd0fd-c87d-405d-9345-5f6ae6594267")) {                    Plotly.newPlot(                        "a47fd0fd-c87d-405d-9345-5f6ae6594267",                        [{"alignmentgroup":"True","hovertemplate":"importance=%{marker.color}\u003cbr\u003efeature=%{y}\u003cextra\u003e\u003c\u002fextra\u003e","legendgroup":"","marker":{"color":[0.006264536256804072,0.007197098558580122,0.011673901786359665,0.013706125721524107,0.016815096402757915,0.02107250848996879,0.021768100192550162,0.03435251047415769,0.0390476634924397,0.03939574482032199,0.044156112443154635,0.04768005789008836,0.06031583350081605,0.06173754883579873,0.06356132681916922,0.07175856843478902,0.0749898251372158,0.09674967335594854,0.10890710577977498,0.12055295515431202],"coloraxis":"coloraxis","pattern":{"shape":""}},"name":"","offsetgroup":"","orientation":"h","showlegend":false,"textposition":"auto","x":[0.006264536256804072,0.007197098558580122,0.011673901786359665,0.013706125721524107,0.016815096402757915,0.02107250848996879,0.021768100192550162,0.03435251047415769,0.0390476634924397,0.03939574482032199,0.044156112443154635,0.04768005789008836,0.06031583350081605,0.06173754883579873,0.06356132681916922,0.07175856843478902,0.0749898251372158,0.09674967335594854,0.10890710577977498,0.12055295515431202],"xaxis":"x","y":["future_wind_day1_max","future_wind_day3_avg","aqi_rolling_mean_12h","aqi_lag_1h","future_wind_direction_day3_avg","aqi_lag_24h","latitude","aqi_lag_3h","future_temp_day2_avg","aqi_rolling_mean_24h","future_pressure_day1_avg","pm25_rolling_mean_24h","future_pressure_day3_avg","future_pressure_day2_avg","surface_pressure","us_aqi","aqi_lag_6h","future_temp_day3_avg","pm10_rolling_mean_24h","future_temp_day1_avg"],"yaxis":"y","type":"bar"}],                        {"template":{"data":{"histogram2dcontour":[{"type":"histogram2dcontour","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"choropleth":[{"type":"choropleth","colorbar":{"outlinewidth":0,"ticks":""}}],"histogram2d":[{"type":"histogram2d","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"heatmap":[{"type":"heatmap","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"heatmapgl":[{"type":"heatmapgl","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"contourcarpet":[{"type":"contourcarpet","colorbar":{"outlinewidth":0,"ticks":""}}],"contour":[{"type":"contour","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"surface":[{"type":"surface","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"mesh3d":[{"type":"mesh3d","colorbar":{"outlinewidth":0,"ticks":""}}],"scatter":[{"fillpattern":{"fillmode":"overlay","size":10,"solidity":0.2},"type":"scatter"}],"parcoords":[{"type":"parcoords","line":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterpolargl":[{"type":"scatterpolargl","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"bar":[{"error_x":{"color":"#2a3f5f"},"error_y":{"color":"#2a3f5f"},"marker":{"line":{"color":"#E5ECF6","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"bar"}],"scattergeo":[{"type":"scattergeo","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterpolar":[{"type":"scatterpolar","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"histogram":[{"marker":{"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"histogram"}],"scattergl":[{"type":"scattergl","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatter3d":[{"type":"scatter3d","line":{"colorbar":{"outlinewidth":0,"ticks":""}},"marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scattermapbox":[{"type":"scattermapbox","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterternary":[{"type":"scatterternary","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scattercarpet":[{"type":"scattercarpet","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"carpet":[{"aaxis":{"endlinecolor":"#2a3f5f","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"#2a3f5f"},"baxis":{"endlinecolor":"#2a3f5f","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"#2a3f5f"},"type":"carpet"}],"table":[{"cells":{"fill":{"color":"#EBF0F8"},"line":{"color":"white"}},"header":{"fill":{"color":"#C8D4E3"},"line":{"color":"white"}},"type":"table"}],"barpolar":[{"marker":{"line":{"color":"#E5ECF6","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"barpolar"}],"pie":[{"automargin":true,"type":"pie"}]},"layout":{"autotypenumbers":"strict","colorway":["#636efa","#EF553B","#00cc96","#ab63fa","#FFA15A","#19d3f3","#FF6692","#B6E880","#FF97FF","#FECB52"],"font":{"color":"#2a3f5f"},"hovermode":"closest","hoverlabel":{"align":"left"},"paper_bgcolor":"white","plot_bgcolor":"#E5ECF6","polar":{"bgcolor":"#E5ECF6","angularaxis":{"gridcolor":"white","linecolor":"white","ticks":""},"radialaxis":{"gridcolor":"white","linecolor":"white","ticks":""}},"ternary":{"bgcolor":"#E5ECF6","aaxis":{"gridcolor":"white","linecolor":"white","ticks":""},"baxis":{"gridcolor":"white","linecolor":"white","ticks":""},"caxis":{"gridcolor":"white","linecolor":"white","ticks":""}},"coloraxis":{"colorbar":{"outlinewidth":0,"ticks":""}},"colorscale":{"sequential":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"sequentialminus":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"diverging":[[0,"#8e0152"],[0.1,"#c51b7d"],[0.2,"#de77ae"],[0.3,"#f1b6da"],[0.4,"#fde0ef"],[0.5,"#f7f7f7"],[0.6,"#e6f5d0"],[0.7,"#b8e186"],[0.8,"#7fbc41"],[0.9,"#4d9221"],[1,"#276419"]]},"xaxis":{"gridcolor":"white","linecolor":"white","ticks":"","title":{"standoff":15},"zerolinecolor":"white","automargin":true,"zerolinewidth":2},"yaxis":{"gridcolor":"white","linecolor":"white","ticks":"","title":{"standoff":15},"zerolinecolor":"white","automargin":true,"zerolinewidth":2},"scene":{"xaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2},"yaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2},"zaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2}},"shapedefaults":{"line":{"color":"#2a3f5f"}},"annotationdefaults":{"arrowcolor":"#2a3f5f","arrowhead":0,"arrowwidth":1},"geo":{"bgcolor":"white","landcolor":"#E5ECF6","subunitcolor":"white","showland":true,"showlakes":true,"lakecolor":"white"},"title":{"x":0.05},"mapbox":{"style":"light"}}},"xaxis":{"anchor":"y","domain":[0.0,1.0],"title":{"text":"importance"}},"yaxis":{"anchor":"x","domain":[0.0,1.0],"title":{"text":"feature"}},"coloraxis":{"colorbar":{"title":{"text":"importance"}},"colorscale":[[0.0,"rgb(247,251,255)"],[0.125,"rgb(222,235,247)"],[0.25,"rgb(198,219,239)"],[0.375,"rgb(158,202,225)"],[0.5,"rgb(107,174,214)"],[0.625,"rgb(66,146,198)"],[0.75,"rgb(33,113,181)"],[0.875,"rgb(8,81,156)"],[1.0,"rgb(8,48,107)"]]},"legend":{"tracegroupgap":0},"title":{"text":"Top Feature Importance for day_1","font":{"size":22,"color":"#0f172a"}},"barmode":"relative","font":{"color":"#0f172a","family":"Arial, sans-serif"},"margin":{"l":30,"r":30,"t":70,"b":40},"height":620,"plot_bgcolor":"#fffdf2","paper_bgcolor":"#fffdf2"},                        {"responsive": true}                    )                };                            </script>        </div>
+                <table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>target</th>
+      <th>model_name</th>
+      <th>feature</th>
+      <th>importance</th>
+      <th>method</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>day_1</td>
+      <td>gradient_boosting</td>
+      <td>future_temp_day1_avg</td>
+      <td>0.120553</td>
+      <td>model_feature_importance</td>
+    </tr>
+    <tr>
+      <td>day_1</td>
+      <td>gradient_boosting</td>
+      <td>pm10_rolling_mean_24h</td>
+      <td>0.108907</td>
+      <td>model_feature_importance</td>
+    </tr>
+    <tr>
+      <td>day_1</td>
+      <td>gradient_boosting</td>
+      <td>future_temp_day3_avg</td>
+      <td>0.096750</td>
+      <td>model_feature_importance</td>
+    </tr>
+    <tr>
+      <td>day_1</td>
+      <td>gradient_boosting</td>
+      <td>aqi_lag_6h</td>
+      <td>0.074990</td>
+      <td>model_feature_importance</td>
+    </tr>
+    <tr>
+      <td>day_1</td>
+      <td>gradient_boosting</td>
+      <td>us_aqi</td>
+      <td>0.071759</td>
+      <td>model_feature_importance</td>
+    </tr>
+    <tr>
+      <td>day_1</td>
+      <td>gradient_boosting</td>
+      <td>surface_pressure</td>
+      <td>0.063561</td>
+      <td>model_feature_importance</td>
+    </tr>
+    <tr>
+      <td>day_1</td>
+      <td>gradient_boosting</td>
+      <td>future_pressure_day2_avg</td>
+      <td>0.061738</td>
+      <td>model_feature_importance</td>
+    </tr>
+    <tr>
+      <td>day_1</td>
+      <td>gradient_boosting</td>
+      <td>future_pressure_day3_avg</td>
+      <td>0.060316</td>
+      <td>model_feature_importance</td>
+    </tr>
+    <tr>
+      <td>day_1</td>
+      <td>gradient_boosting</td>
+      <td>pm25_rolling_mean_24h</td>
+      <td>0.047680</td>
+      <td>model_feature_importance</td>
+    </tr>
+    <tr>
+      <td>day_1</td>
+      <td>gradient_boosting</td>
+      <td>future_pressure_day1_avg</td>
+      <td>0.044156</td>
+      <td>model_feature_importance</td>
+    </tr>
+    <tr>
+      <td>day_1</td>
+      <td>gradient_boosting</td>
+      <td>aqi_rolling_mean_24h</td>
+      <td>0.039396</td>
+      <td>model_feature_importance</td>
+    </tr>
+    <tr>
+      <td>day_1</td>
+      <td>gradient_boosting</td>
+      <td>future_temp_day2_avg</td>
+      <td>0.039048</td>
+      <td>model_feature_importance</td>
+    </tr>
+    <tr>
+      <td>day_1</td>
+      <td>gradient_boosting</td>
+      <td>aqi_lag_3h</td>
+      <td>0.034353</td>
+      <td>model_feature_importance</td>
+    </tr>
+    <tr>
+      <td>day_1</td>
+      <td>gradient_boosting</td>
+      <td>latitude</td>
+      <td>0.021768</td>
+      <td>model_feature_importance</td>
+    </tr>
+    <tr>
+      <td>day_1</td>
+      <td>gradient_boosting</td>
+      <td>aqi_lag_24h</td>
+      <td>0.021073</td>
+      <td>model_feature_importance</td>
+    </tr>
+    <tr>
+      <td>day_1</td>
+      <td>gradient_boosting</td>
+      <td>future_wind_direction_day3_avg</td>
+      <td>0.016815</td>
+      <td>model_feature_importance</td>
+    </tr>
+    <tr>
+      <td>day_1</td>
+      <td>gradient_boosting</td>
+      <td>aqi_lag_1h</td>
+      <td>0.013706</td>
+      <td>model_feature_importance</td>
+    </tr>
+    <tr>
+      <td>day_1</td>
+      <td>gradient_boosting</td>
+      <td>aqi_rolling_mean_12h</td>
+      <td>0.011674</td>
+      <td>model_feature_importance</td>
+    </tr>
+    <tr>
+      <td>day_1</td>
+      <td>gradient_boosting</td>
+      <td>future_wind_day3_avg</td>
+      <td>0.007197</td>
+      <td>model_feature_importance</td>
+    </tr>
+    <tr>
+      <td>day_1</td>
+      <td>gradient_boosting</td>
+      <td>future_wind_day1_max</td>
+      <td>0.006265</td>
+      <td>model_feature_importance</td>
+    </tr>
+  </tbody>
+</table>
+            </div>
+            
+
+            <div class="card">
+                <h2>Explainability: day_2</h2>
+                <div>                        <script type="text/javascript">window.PlotlyConfig = {MathJaxConfig: 'local'};</script>
+        <script charset="utf-8" src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>                <div id="030c4729-6527-4a6e-a49f-91f1ba090da9" class="plotly-graph-div" style="height:620px; width:100%;"></div>            <script type="text/javascript">                                    window.PLOTLYENV=window.PLOTLYENV || {};                                    if (document.getElementById("030c4729-6527-4a6e-a49f-91f1ba090da9")) {                    Plotly.newPlot(                        "030c4729-6527-4a6e-a49f-91f1ba090da9",                        [{"alignmentgroup":"True","hovertemplate":"importance=%{marker.color}\u003cbr\u003efeature=%{y}\u003cextra\u003e\u003c\u002fextra\u003e","legendgroup":"","marker":{"color":[0.32580122441150355,0.34979714644385496,0.44568386061606063,0.4952119145787295,0.5115588585391958,0.5693828459225999,0.6007305451786976,0.6497644637755539,0.7000295699094273,0.77654752668915,0.856463716732225,1.2958419513865838,1.434511462793166,1.4999092059147197,2.5224507819232262,3.3846959731587547,4.538577842000575,4.829893104875995,7.873038624632517,9.963331012852084],"coloraxis":"coloraxis","pattern":{"shape":""}},"name":"","offsetgroup":"","orientation":"h","showlegend":false,"textposition":"auto","x":[0.32580122441150355,0.34979714644385496,0.44568386061606063,0.4952119145787295,0.5115588585391958,0.5693828459225999,0.6007305451786976,0.6497644637755539,0.7000295699094273,0.77654752668915,0.856463716732225,1.2958419513865838,1.434511462793166,1.4999092059147197,2.5224507819232262,3.3846959731587547,4.538577842000575,4.829893104875995,7.873038624632517,9.963331012852084],"xaxis":"x","y":["future_wind_day2_avg","future_wind_day1_avg","future_wind_direction_day2_avg","aqi_change_rate_24h","aqi_rolling_mean_12h","future_wind_day1_max","future_humidity_day1_avg","pm10_rolling_mean_24h","pm25_rolling_mean_24h","future_humidity_day3_avg","wind_speed_rolling_mean_24h","future_temp_day3_avg","aqi_rolling_mean_24h","pressure_rolling_mean_24h","future_humidity_day2_avg","future_temp_day2_avg","future_pressure_day3_avg","future_wind_direction_day3_avg","latitude","future_temp_day1_avg"],"yaxis":"y","type":"bar"}],                        {"template":{"data":{"histogram2dcontour":[{"type":"histogram2dcontour","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"choropleth":[{"type":"choropleth","colorbar":{"outlinewidth":0,"ticks":""}}],"histogram2d":[{"type":"histogram2d","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"heatmap":[{"type":"heatmap","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"heatmapgl":[{"type":"heatmapgl","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"contourcarpet":[{"type":"contourcarpet","colorbar":{"outlinewidth":0,"ticks":""}}],"contour":[{"type":"contour","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"surface":[{"type":"surface","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"mesh3d":[{"type":"mesh3d","colorbar":{"outlinewidth":0,"ticks":""}}],"scatter":[{"fillpattern":{"fillmode":"overlay","size":10,"solidity":0.2},"type":"scatter"}],"parcoords":[{"type":"parcoords","line":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterpolargl":[{"type":"scatterpolargl","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"bar":[{"error_x":{"color":"#2a3f5f"},"error_y":{"color":"#2a3f5f"},"marker":{"line":{"color":"#E5ECF6","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"bar"}],"scattergeo":[{"type":"scattergeo","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterpolar":[{"type":"scatterpolar","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"histogram":[{"marker":{"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"histogram"}],"scattergl":[{"type":"scattergl","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatter3d":[{"type":"scatter3d","line":{"colorbar":{"outlinewidth":0,"ticks":""}},"marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scattermapbox":[{"type":"scattermapbox","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterternary":[{"type":"scatterternary","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scattercarpet":[{"type":"scattercarpet","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"carpet":[{"aaxis":{"endlinecolor":"#2a3f5f","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"#2a3f5f"},"baxis":{"endlinecolor":"#2a3f5f","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"#2a3f5f"},"type":"carpet"}],"table":[{"cells":{"fill":{"color":"#EBF0F8"},"line":{"color":"white"}},"header":{"fill":{"color":"#C8D4E3"},"line":{"color":"white"}},"type":"table"}],"barpolar":[{"marker":{"line":{"color":"#E5ECF6","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"barpolar"}],"pie":[{"automargin":true,"type":"pie"}]},"layout":{"autotypenumbers":"strict","colorway":["#636efa","#EF553B","#00cc96","#ab63fa","#FFA15A","#19d3f3","#FF6692","#B6E880","#FF97FF","#FECB52"],"font":{"color":"#2a3f5f"},"hovermode":"closest","hoverlabel":{"align":"left"},"paper_bgcolor":"white","plot_bgcolor":"#E5ECF6","polar":{"bgcolor":"#E5ECF6","angularaxis":{"gridcolor":"white","linecolor":"white","ticks":""},"radialaxis":{"gridcolor":"white","linecolor":"white","ticks":""}},"ternary":{"bgcolor":"#E5ECF6","aaxis":{"gridcolor":"white","linecolor":"white","ticks":""},"baxis":{"gridcolor":"white","linecolor":"white","ticks":""},"caxis":{"gridcolor":"white","linecolor":"white","ticks":""}},"coloraxis":{"colorbar":{"outlinewidth":0,"ticks":""}},"colorscale":{"sequential":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"sequentialminus":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"diverging":[[0,"#8e0152"],[0.1,"#c51b7d"],[0.2,"#de77ae"],[0.3,"#f1b6da"],[0.4,"#fde0ef"],[0.5,"#f7f7f7"],[0.6,"#e6f5d0"],[0.7,"#b8e186"],[0.8,"#7fbc41"],[0.9,"#4d9221"],[1,"#276419"]]},"xaxis":{"gridcolor":"white","linecolor":"white","ticks":"","title":{"standoff":15},"zerolinecolor":"white","automargin":true,"zerolinewidth":2},"yaxis":{"gridcolor":"white","linecolor":"white","ticks":"","title":{"standoff":15},"zerolinecolor":"white","automargin":true,"zerolinewidth":2},"scene":{"xaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2},"yaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2},"zaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2}},"shapedefaults":{"line":{"color":"#2a3f5f"}},"annotationdefaults":{"arrowcolor":"#2a3f5f","arrowhead":0,"arrowwidth":1},"geo":{"bgcolor":"white","landcolor":"#E5ECF6","subunitcolor":"white","showland":true,"showlakes":true,"lakecolor":"white"},"title":{"x":0.05},"mapbox":{"style":"light"}}},"xaxis":{"anchor":"y","domain":[0.0,1.0],"title":{"text":"importance"}},"yaxis":{"anchor":"x","domain":[0.0,1.0],"title":{"text":"feature"}},"coloraxis":{"colorbar":{"title":{"text":"importance"}},"colorscale":[[0.0,"rgb(247,251,255)"],[0.125,"rgb(222,235,247)"],[0.25,"rgb(198,219,239)"],[0.375,"rgb(158,202,225)"],[0.5,"rgb(107,174,214)"],[0.625,"rgb(66,146,198)"],[0.75,"rgb(33,113,181)"],[0.875,"rgb(8,81,156)"],[1.0,"rgb(8,48,107)"]]},"legend":{"tracegroupgap":0},"title":{"text":"Top Feature Importance for day_2","font":{"size":22,"color":"#0f172a"}},"barmode":"relative","font":{"color":"#0f172a","family":"Arial, sans-serif"},"margin":{"l":30,"r":30,"t":70,"b":40},"height":620,"plot_bgcolor":"#fffdf2","paper_bgcolor":"#fffdf2"},                        {"responsive": true}                    )                };                            </script>        </div>
+                <table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>target</th>
+      <th>model_name</th>
+      <th>feature</th>
+      <th>importance</th>
+      <th>method</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>day_2</td>
+      <td>hist_gradient_boosting</td>
+      <td>future_temp_day1_avg</td>
+      <td>9.963331</td>
+      <td>permutation_importance</td>
+    </tr>
+    <tr>
+      <td>day_2</td>
+      <td>hist_gradient_boosting</td>
+      <td>latitude</td>
+      <td>7.873039</td>
+      <td>permutation_importance</td>
+    </tr>
+    <tr>
+      <td>day_2</td>
+      <td>hist_gradient_boosting</td>
+      <td>future_wind_direction_day3_avg</td>
+      <td>4.829893</td>
+      <td>permutation_importance</td>
+    </tr>
+    <tr>
+      <td>day_2</td>
+      <td>hist_gradient_boosting</td>
+      <td>future_pressure_day3_avg</td>
+      <td>4.538578</td>
+      <td>permutation_importance</td>
+    </tr>
+    <tr>
+      <td>day_2</td>
+      <td>hist_gradient_boosting</td>
+      <td>future_temp_day2_avg</td>
+      <td>3.384696</td>
+      <td>permutation_importance</td>
+    </tr>
+    <tr>
+      <td>day_2</td>
+      <td>hist_gradient_boosting</td>
+      <td>future_humidity_day2_avg</td>
+      <td>2.522451</td>
+      <td>permutation_importance</td>
+    </tr>
+    <tr>
+      <td>day_2</td>
+      <td>hist_gradient_boosting</td>
+      <td>pressure_rolling_mean_24h</td>
+      <td>1.499909</td>
+      <td>permutation_importance</td>
+    </tr>
+    <tr>
+      <td>day_2</td>
+      <td>hist_gradient_boosting</td>
+      <td>aqi_rolling_mean_24h</td>
+      <td>1.434511</td>
+      <td>permutation_importance</td>
+    </tr>
+    <tr>
+      <td>day_2</td>
+      <td>hist_gradient_boosting</td>
+      <td>future_temp_day3_avg</td>
+      <td>1.295842</td>
+      <td>permutation_importance</td>
+    </tr>
+    <tr>
+      <td>day_2</td>
+      <td>hist_gradient_boosting</td>
+      <td>wind_speed_rolling_mean_24h</td>
+      <td>0.856464</td>
+      <td>permutation_importance</td>
+    </tr>
+    <tr>
+      <td>day_2</td>
+      <td>hist_gradient_boosting</td>
+      <td>future_humidity_day3_avg</td>
+      <td>0.776548</td>
+      <td>permutation_importance</td>
+    </tr>
+    <tr>
+      <td>day_2</td>
+      <td>hist_gradient_boosting</td>
+      <td>pm25_rolling_mean_24h</td>
+      <td>0.700030</td>
+      <td>permutation_importance</td>
+    </tr>
+    <tr>
+      <td>day_2</td>
+      <td>hist_gradient_boosting</td>
+      <td>pm10_rolling_mean_24h</td>
+      <td>0.649764</td>
+      <td>permutation_importance</td>
+    </tr>
+    <tr>
+      <td>day_2</td>
+      <td>hist_gradient_boosting</td>
+      <td>future_humidity_day1_avg</td>
+      <td>0.600731</td>
+      <td>permutation_importance</td>
+    </tr>
+    <tr>
+      <td>day_2</td>
+      <td>hist_gradient_boosting</td>
+      <td>future_wind_day1_max</td>
+      <td>0.569383</td>
+      <td>permutation_importance</td>
+    </tr>
+    <tr>
+      <td>day_2</td>
+      <td>hist_gradient_boosting</td>
+      <td>aqi_rolling_mean_12h</td>
+      <td>0.511559</td>
+      <td>permutation_importance</td>
+    </tr>
+    <tr>
+      <td>day_2</td>
+      <td>hist_gradient_boosting</td>
+      <td>aqi_change_rate_24h</td>
+      <td>0.495212</td>
+      <td>permutation_importance</td>
+    </tr>
+    <tr>
+      <td>day_2</td>
+      <td>hist_gradient_boosting</td>
+      <td>future_wind_direction_day2_avg</td>
+      <td>0.445684</td>
+      <td>permutation_importance</td>
+    </tr>
+    <tr>
+      <td>day_2</td>
+      <td>hist_gradient_boosting</td>
+      <td>future_wind_day1_avg</td>
+      <td>0.349797</td>
+      <td>permutation_importance</td>
+    </tr>
+    <tr>
+      <td>day_2</td>
+      <td>hist_gradient_boosting</td>
+      <td>future_wind_day2_avg</td>
+      <td>0.325801</td>
+      <td>permutation_importance</td>
+    </tr>
+  </tbody>
+</table>
+            </div>
+            
+
+            <div class="card">
+                <h2>Explainability: day_3</h2>
+                <div>                        <script type="text/javascript">window.PlotlyConfig = {MathJaxConfig: 'local'};</script>
+        <script charset="utf-8" src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>                <div id="c02c9c2e-260d-43a8-b991-2b647b85aad0" class="plotly-graph-div" style="height:620px; width:100%;"></div>            <script type="text/javascript">                                    window.PLOTLYENV=window.PLOTLYENV || {};                                    if (document.getElementById("c02c9c2e-260d-43a8-b991-2b647b85aad0")) {                    Plotly.newPlot(                        "c02c9c2e-260d-43a8-b991-2b647b85aad0",                        [{"alignmentgroup":"True","hovertemplate":"importance=%{marker.color}\u003cbr\u003efeature=%{y}\u003cextra\u003e\u003c\u002fextra\u003e","legendgroup":"","marker":{"color":[0.007269006491630547,0.0073834689305261,0.007861272284801756,0.010865666141765632,0.01461531906707965,0.01723216131675957,0.018932498677127894,0.02449423254437927,0.02452370489635289,0.028149195217842087,0.03718968184938135,0.039617566019651336,0.04881226925190184,0.07078812103669335,0.08355740058328309,0.09056563707613496,0.09330667515524427,0.09664932741638177,0.09689152828179258,0.11256101528077321],"coloraxis":"coloraxis","pattern":{"shape":""}},"name":"","offsetgroup":"","orientation":"h","showlegend":false,"textposition":"auto","x":[0.007269006491630547,0.0073834689305261,0.007861272284801756,0.010865666141765632,0.01461531906707965,0.01723216131675957,0.018932498677127894,0.02449423254437927,0.02452370489635289,0.028149195217842087,0.03718968184938135,0.039617566019651336,0.04881226925190184,0.07078812103669335,0.08355740058328309,0.09056563707613496,0.09330667515524427,0.09664932741638177,0.09689152828179258,0.11256101528077321],"xaxis":"x","y":["aqi_lag_3h","longitude","future_wind_direction_day3_avg","aqi_rolling_mean_6h","aqi_rolling_mean_12h","future_wind_day2_max","future_humidity_day3_avg","latitude","dayofweek","pm10_rolling_mean_24h","aqi_rolling_mean_24h","future_humidity_day1_avg","future_temp_day1_avg","surface_pressure","future_temp_day2_avg","future_pressure_day1_avg","future_humidity_day2_avg","future_pressure_day2_avg","pressure_rolling_mean_24h","future_pressure_day3_avg"],"yaxis":"y","type":"bar"}],                        {"template":{"data":{"histogram2dcontour":[{"type":"histogram2dcontour","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"choropleth":[{"type":"choropleth","colorbar":{"outlinewidth":0,"ticks":""}}],"histogram2d":[{"type":"histogram2d","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"heatmap":[{"type":"heatmap","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"heatmapgl":[{"type":"heatmapgl","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"contourcarpet":[{"type":"contourcarpet","colorbar":{"outlinewidth":0,"ticks":""}}],"contour":[{"type":"contour","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"surface":[{"type":"surface","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"mesh3d":[{"type":"mesh3d","colorbar":{"outlinewidth":0,"ticks":""}}],"scatter":[{"fillpattern":{"fillmode":"overlay","size":10,"solidity":0.2},"type":"scatter"}],"parcoords":[{"type":"parcoords","line":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterpolargl":[{"type":"scatterpolargl","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"bar":[{"error_x":{"color":"#2a3f5f"},"error_y":{"color":"#2a3f5f"},"marker":{"line":{"color":"#E5ECF6","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"bar"}],"scattergeo":[{"type":"scattergeo","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterpolar":[{"type":"scatterpolar","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"histogram":[{"marker":{"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"histogram"}],"scattergl":[{"type":"scattergl","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatter3d":[{"type":"scatter3d","line":{"colorbar":{"outlinewidth":0,"ticks":""}},"marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scattermapbox":[{"type":"scattermapbox","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterternary":[{"type":"scatterternary","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scattercarpet":[{"type":"scattercarpet","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"carpet":[{"aaxis":{"endlinecolor":"#2a3f5f","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"#2a3f5f"},"baxis":{"endlinecolor":"#2a3f5f","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"#2a3f5f"},"type":"carpet"}],"table":[{"cells":{"fill":{"color":"#EBF0F8"},"line":{"color":"white"}},"header":{"fill":{"color":"#C8D4E3"},"line":{"color":"white"}},"type":"table"}],"barpolar":[{"marker":{"line":{"color":"#E5ECF6","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"barpolar"}],"pie":[{"automargin":true,"type":"pie"}]},"layout":{"autotypenumbers":"strict","colorway":["#636efa","#EF553B","#00cc96","#ab63fa","#FFA15A","#19d3f3","#FF6692","#B6E880","#FF97FF","#FECB52"],"font":{"color":"#2a3f5f"},"hovermode":"closest","hoverlabel":{"align":"left"},"paper_bgcolor":"white","plot_bgcolor":"#E5ECF6","polar":{"bgcolor":"#E5ECF6","angularaxis":{"gridcolor":"white","linecolor":"white","ticks":""},"radialaxis":{"gridcolor":"white","linecolor":"white","ticks":""}},"ternary":{"bgcolor":"#E5ECF6","aaxis":{"gridcolor":"white","linecolor":"white","ticks":""},"baxis":{"gridcolor":"white","linecolor":"white","ticks":""},"caxis":{"gridcolor":"white","linecolor":"white","ticks":""}},"coloraxis":{"colorbar":{"outlinewidth":0,"ticks":""}},"colorscale":{"sequential":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"sequentialminus":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"diverging":[[0,"#8e0152"],[0.1,"#c51b7d"],[0.2,"#de77ae"],[0.3,"#f1b6da"],[0.4,"#fde0ef"],[0.5,"#f7f7f7"],[0.6,"#e6f5d0"],[0.7,"#b8e186"],[0.8,"#7fbc41"],[0.9,"#4d9221"],[1,"#276419"]]},"xaxis":{"gridcolor":"white","linecolor":"white","ticks":"","title":{"standoff":15},"zerolinecolor":"white","automargin":true,"zerolinewidth":2},"yaxis":{"gridcolor":"white","linecolor":"white","ticks":"","title":{"standoff":15},"zerolinecolor":"white","automargin":true,"zerolinewidth":2},"scene":{"xaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2},"yaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2},"zaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2}},"shapedefaults":{"line":{"color":"#2a3f5f"}},"annotationdefaults":{"arrowcolor":"#2a3f5f","arrowhead":0,"arrowwidth":1},"geo":{"bgcolor":"white","landcolor":"#E5ECF6","subunitcolor":"white","showland":true,"showlakes":true,"lakecolor":"white"},"title":{"x":0.05},"mapbox":{"style":"light"}}},"xaxis":{"anchor":"y","domain":[0.0,1.0],"title":{"text":"importance"}},"yaxis":{"anchor":"x","domain":[0.0,1.0],"title":{"text":"feature"}},"coloraxis":{"colorbar":{"title":{"text":"importance"}},"colorscale":[[0.0,"rgb(247,251,255)"],[0.125,"rgb(222,235,247)"],[0.25,"rgb(198,219,239)"],[0.375,"rgb(158,202,225)"],[0.5,"rgb(107,174,214)"],[0.625,"rgb(66,146,198)"],[0.75,"rgb(33,113,181)"],[0.875,"rgb(8,81,156)"],[1.0,"rgb(8,48,107)"]]},"legend":{"tracegroupgap":0},"title":{"text":"Top Feature Importance for day_3","font":{"size":22,"color":"#0f172a"}},"barmode":"relative","font":{"color":"#0f172a","family":"Arial, sans-serif"},"margin":{"l":30,"r":30,"t":70,"b":40},"height":620,"plot_bgcolor":"#fffdf2","paper_bgcolor":"#fffdf2"},                        {"responsive": true}                    )                };                            </script>        </div>
+                <table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>target</th>
+      <th>model_name</th>
+      <th>feature</th>
+      <th>importance</th>
+      <th>method</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>day_3</td>
+      <td>extra_trees</td>
+      <td>future_pressure_day3_avg</td>
+      <td>0.112561</td>
+      <td>model_feature_importance</td>
+    </tr>
+    <tr>
+      <td>day_3</td>
+      <td>extra_trees</td>
+      <td>pressure_rolling_mean_24h</td>
+      <td>0.096892</td>
+      <td>model_feature_importance</td>
+    </tr>
+    <tr>
+      <td>day_3</td>
+      <td>extra_trees</td>
+      <td>future_pressure_day2_avg</td>
+      <td>0.096649</td>
+      <td>model_feature_importance</td>
+    </tr>
+    <tr>
+      <td>day_3</td>
+      <td>extra_trees</td>
+      <td>future_humidity_day2_avg</td>
+      <td>0.093307</td>
+      <td>model_feature_importance</td>
+    </tr>
+    <tr>
+      <td>day_3</td>
+      <td>extra_trees</td>
+      <td>future_pressure_day1_avg</td>
+      <td>0.090566</td>
+      <td>model_feature_importance</td>
+    </tr>
+    <tr>
+      <td>day_3</td>
+      <td>extra_trees</td>
+      <td>future_temp_day2_avg</td>
+      <td>0.083557</td>
+      <td>model_feature_importance</td>
+    </tr>
+    <tr>
+      <td>day_3</td>
+      <td>extra_trees</td>
+      <td>surface_pressure</td>
+      <td>0.070788</td>
+      <td>model_feature_importance</td>
+    </tr>
+    <tr>
+      <td>day_3</td>
+      <td>extra_trees</td>
+      <td>future_temp_day1_avg</td>
+      <td>0.048812</td>
+      <td>model_feature_importance</td>
+    </tr>
+    <tr>
+      <td>day_3</td>
+      <td>extra_trees</td>
+      <td>future_humidity_day1_avg</td>
+      <td>0.039618</td>
+      <td>model_feature_importance</td>
+    </tr>
+    <tr>
+      <td>day_3</td>
+      <td>extra_trees</td>
+      <td>aqi_rolling_mean_24h</td>
+      <td>0.037190</td>
+      <td>model_feature_importance</td>
+    </tr>
+    <tr>
+      <td>day_3</td>
+      <td>extra_trees</td>
+      <td>pm10_rolling_mean_24h</td>
+      <td>0.028149</td>
+      <td>model_feature_importance</td>
+    </tr>
+    <tr>
+      <td>day_3</td>
+      <td>extra_trees</td>
+      <td>dayofweek</td>
+      <td>0.024524</td>
+      <td>model_feature_importance</td>
+    </tr>
+    <tr>
+      <td>day_3</td>
+      <td>extra_trees</td>
+      <td>latitude</td>
+      <td>0.024494</td>
+      <td>model_feature_importance</td>
+    </tr>
+    <tr>
+      <td>day_3</td>
+      <td>extra_trees</td>
+      <td>future_humidity_day3_avg</td>
+      <td>0.018932</td>
+      <td>model_feature_importance</td>
+    </tr>
+    <tr>
+      <td>day_3</td>
+      <td>extra_trees</td>
+      <td>future_wind_day2_max</td>
+      <td>0.017232</td>
+      <td>model_feature_importance</td>
+    </tr>
+    <tr>
+      <td>day_3</td>
+      <td>extra_trees</td>
+      <td>aqi_rolling_mean_12h</td>
+      <td>0.014615</td>
+      <td>model_feature_importance</td>
+    </tr>
+    <tr>
+      <td>day_3</td>
+      <td>extra_trees</td>
+      <td>aqi_rolling_mean_6h</td>
+      <td>0.010866</td>
+      <td>model_feature_importance</td>
+    </tr>
+    <tr>
+      <td>day_3</td>
+      <td>extra_trees</td>
+      <td>future_wind_direction_day3_avg</td>
+      <td>0.007861</td>
+      <td>model_feature_importance</td>
+    </tr>
+    <tr>
+      <td>day_3</td>
+      <td>extra_trees</td>
+      <td>longitude</td>
+      <td>0.007383</td>
+      <td>model_feature_importance</td>
+    </tr>
+    <tr>
+      <td>day_3</td>
+      <td>extra_trees</td>
+      <td>aqi_lag_3h</td>
+      <td>0.007269</td>
+      <td>model_feature_importance</td>
+    </tr>
+  </tbody>
+</table>
+            </div>
+            
+
+            <div class="card">
+                <h2>Explainability: next_72h_avg</h2>
+                <div>                        <script type="text/javascript">window.PlotlyConfig = {MathJaxConfig: 'local'};</script>
+        <script charset="utf-8" src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>                <div id="98e6114e-43f6-4c2f-811c-ef276d818bb3" class="plotly-graph-div" style="height:620px; width:100%;"></div>            <script type="text/javascript">                                    window.PLOTLYENV=window.PLOTLYENV || {};                                    if (document.getElementById("98e6114e-43f6-4c2f-811c-ef276d818bb3")) {                    Plotly.newPlot(                        "98e6114e-43f6-4c2f-811c-ef276d818bb3",                        [{"alignmentgroup":"True","hovertemplate":"importance=%{marker.color}\u003cbr\u003efeature=%{y}\u003cextra\u003e\u003c\u002fextra\u003e","legendgroup":"","marker":{"color":[0.006655070940188744,0.008770775964818229,0.010659454074059889,0.01121930950824238,0.013450714656451711,0.015253162698126299,0.015840965603445813,0.017685359670624838,0.03517075834473528,0.035248036238094166,0.03979112592450904,0.043709888489747,0.04539765345953073,0.048824788045243005,0.056161706423112585,0.060969124482522,0.07154457091245778,0.10955371400569766,0.14639772378717059,0.18772888755878264],"coloraxis":"coloraxis","pattern":{"shape":""}},"name":"","offsetgroup":"","orientation":"h","showlegend":false,"textposition":"auto","x":[0.006655070940188744,0.008770775964818229,0.010659454074059889,0.01121930950824238,0.013450714656451711,0.015253162698126299,0.015840965603445813,0.017685359670624838,0.03517075834473528,0.035248036238094166,0.03979112592450904,0.043709888489747,0.04539765345953073,0.048824788045243005,0.056161706423112585,0.060969124482522,0.07154457091245778,0.10955371400569766,0.14639772378717059,0.18772888755878264],"xaxis":"x","y":["surface_pressure","aqi_rolling_mean_24h","pm25_rolling_mean_24h","future_humidity_day1_avg","aqi_rolling_mean_3h","aqi_lag_6h","aqi_rolling_mean_6h","aqi_lag_1h","future_wind_direction_day3_avg","aqi_lag_3h","aqi_lag_12h","future_pressure_day3_avg","future_temp_day3_avg","future_temp_day2_avg","aqi_rolling_mean_12h","future_humidity_day2_avg","us_aqi","aqi_lag_24h","pm10_rolling_mean_24h","future_temp_day1_avg"],"yaxis":"y","type":"bar"}],                        {"template":{"data":{"histogram2dcontour":[{"type":"histogram2dcontour","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"choropleth":[{"type":"choropleth","colorbar":{"outlinewidth":0,"ticks":""}}],"histogram2d":[{"type":"histogram2d","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"heatmap":[{"type":"heatmap","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"heatmapgl":[{"type":"heatmapgl","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"contourcarpet":[{"type":"contourcarpet","colorbar":{"outlinewidth":0,"ticks":""}}],"contour":[{"type":"contour","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"surface":[{"type":"surface","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"mesh3d":[{"type":"mesh3d","colorbar":{"outlinewidth":0,"ticks":""}}],"scatter":[{"fillpattern":{"fillmode":"overlay","size":10,"solidity":0.2},"type":"scatter"}],"parcoords":[{"type":"parcoords","line":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterpolargl":[{"type":"scatterpolargl","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"bar":[{"error_x":{"color":"#2a3f5f"},"error_y":{"color":"#2a3f5f"},"marker":{"line":{"color":"#E5ECF6","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"bar"}],"scattergeo":[{"type":"scattergeo","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterpolar":[{"type":"scatterpolar","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"histogram":[{"marker":{"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"histogram"}],"scattergl":[{"type":"scattergl","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatter3d":[{"type":"scatter3d","line":{"colorbar":{"outlinewidth":0,"ticks":""}},"marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scattermapbox":[{"type":"scattermapbox","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterternary":[{"type":"scatterternary","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scattercarpet":[{"type":"scattercarpet","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"carpet":[{"aaxis":{"endlinecolor":"#2a3f5f","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"#2a3f5f"},"baxis":{"endlinecolor":"#2a3f5f","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"#2a3f5f"},"type":"carpet"}],"table":[{"cells":{"fill":{"color":"#EBF0F8"},"line":{"color":"white"}},"header":{"fill":{"color":"#C8D4E3"},"line":{"color":"white"}},"type":"table"}],"barpolar":[{"marker":{"line":{"color":"#E5ECF6","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"barpolar"}],"pie":[{"automargin":true,"type":"pie"}]},"layout":{"autotypenumbers":"strict","colorway":["#636efa","#EF553B","#00cc96","#ab63fa","#FFA15A","#19d3f3","#FF6692","#B6E880","#FF97FF","#FECB52"],"font":{"color":"#2a3f5f"},"hovermode":"closest","hoverlabel":{"align":"left"},"paper_bgcolor":"white","plot_bgcolor":"#E5ECF6","polar":{"bgcolor":"#E5ECF6","angularaxis":{"gridcolor":"white","linecolor":"white","ticks":""},"radialaxis":{"gridcolor":"white","linecolor":"white","ticks":""}},"ternary":{"bgcolor":"#E5ECF6","aaxis":{"gridcolor":"white","linecolor":"white","ticks":""},"baxis":{"gridcolor":"white","linecolor":"white","ticks":""},"caxis":{"gridcolor":"white","linecolor":"white","ticks":""}},"coloraxis":{"colorbar":{"outlinewidth":0,"ticks":""}},"colorscale":{"sequential":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"sequentialminus":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"diverging":[[0,"#8e0152"],[0.1,"#c51b7d"],[0.2,"#de77ae"],[0.3,"#f1b6da"],[0.4,"#fde0ef"],[0.5,"#f7f7f7"],[0.6,"#e6f5d0"],[0.7,"#b8e186"],[0.8,"#7fbc41"],[0.9,"#4d9221"],[1,"#276419"]]},"xaxis":{"gridcolor":"white","linecolor":"white","ticks":"","title":{"standoff":15},"zerolinecolor":"white","automargin":true,"zerolinewidth":2},"yaxis":{"gridcolor":"white","linecolor":"white","ticks":"","title":{"standoff":15},"zerolinecolor":"white","automargin":true,"zerolinewidth":2},"scene":{"xaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2},"yaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2},"zaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2}},"shapedefaults":{"line":{"color":"#2a3f5f"}},"annotationdefaults":{"arrowcolor":"#2a3f5f","arrowhead":0,"arrowwidth":1},"geo":{"bgcolor":"white","landcolor":"#E5ECF6","subunitcolor":"white","showland":true,"showlakes":true,"lakecolor":"white"},"title":{"x":0.05},"mapbox":{"style":"light"}}},"xaxis":{"anchor":"y","domain":[0.0,1.0],"title":{"text":"importance"}},"yaxis":{"anchor":"x","domain":[0.0,1.0],"title":{"text":"feature"}},"coloraxis":{"colorbar":{"title":{"text":"importance"}},"colorscale":[[0.0,"rgb(247,251,255)"],[0.125,"rgb(222,235,247)"],[0.25,"rgb(198,219,239)"],[0.375,"rgb(158,202,225)"],[0.5,"rgb(107,174,214)"],[0.625,"rgb(66,146,198)"],[0.75,"rgb(33,113,181)"],[0.875,"rgb(8,81,156)"],[1.0,"rgb(8,48,107)"]]},"legend":{"tracegroupgap":0},"title":{"text":"Top Feature Importance for next_72h_avg","font":{"size":22,"color":"#0f172a"}},"barmode":"relative","font":{"color":"#0f172a","family":"Arial, sans-serif"},"margin":{"l":30,"r":30,"t":70,"b":40},"height":620,"plot_bgcolor":"#fffdf2","paper_bgcolor":"#fffdf2"},                        {"responsive": true}                    )                };                            </script>        </div>
+                <table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>target</th>
+      <th>model_name</th>
+      <th>feature</th>
+      <th>importance</th>
+      <th>method</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>next_72h_avg</td>
+      <td>gradient_boosting</td>
+      <td>future_temp_day1_avg</td>
+      <td>0.187729</td>
+      <td>model_feature_importance</td>
+    </tr>
+    <tr>
+      <td>next_72h_avg</td>
+      <td>gradient_boosting</td>
+      <td>pm10_rolling_mean_24h</td>
+      <td>0.146398</td>
+      <td>model_feature_importance</td>
+    </tr>
+    <tr>
+      <td>next_72h_avg</td>
+      <td>gradient_boosting</td>
+      <td>aqi_lag_24h</td>
+      <td>0.109554</td>
+      <td>model_feature_importance</td>
+    </tr>
+    <tr>
+      <td>next_72h_avg</td>
+      <td>gradient_boosting</td>
+      <td>us_aqi</td>
+      <td>0.071545</td>
+      <td>model_feature_importance</td>
+    </tr>
+    <tr>
+      <td>next_72h_avg</td>
+      <td>gradient_boosting</td>
+      <td>future_humidity_day2_avg</td>
+      <td>0.060969</td>
+      <td>model_feature_importance</td>
+    </tr>
+    <tr>
+      <td>next_72h_avg</td>
+      <td>gradient_boosting</td>
+      <td>aqi_rolling_mean_12h</td>
+      <td>0.056162</td>
+      <td>model_feature_importance</td>
+    </tr>
+    <tr>
+      <td>next_72h_avg</td>
+      <td>gradient_boosting</td>
+      <td>future_temp_day2_avg</td>
+      <td>0.048825</td>
+      <td>model_feature_importance</td>
+    </tr>
+    <tr>
+      <td>next_72h_avg</td>
+      <td>gradient_boosting</td>
+      <td>future_temp_day3_avg</td>
+      <td>0.045398</td>
+      <td>model_feature_importance</td>
+    </tr>
+    <tr>
+      <td>next_72h_avg</td>
+      <td>gradient_boosting</td>
+      <td>future_pressure_day3_avg</td>
+      <td>0.043710</td>
+      <td>model_feature_importance</td>
+    </tr>
+    <tr>
+      <td>next_72h_avg</td>
+      <td>gradient_boosting</td>
+      <td>aqi_lag_12h</td>
+      <td>0.039791</td>
+      <td>model_feature_importance</td>
+    </tr>
+    <tr>
+      <td>next_72h_avg</td>
+      <td>gradient_boosting</td>
+      <td>aqi_lag_3h</td>
+      <td>0.035248</td>
+      <td>model_feature_importance</td>
+    </tr>
+    <tr>
+      <td>next_72h_avg</td>
+      <td>gradient_boosting</td>
+      <td>future_wind_direction_day3_avg</td>
+      <td>0.035171</td>
+      <td>model_feature_importance</td>
+    </tr>
+    <tr>
+      <td>next_72h_avg</td>
+      <td>gradient_boosting</td>
+      <td>aqi_lag_1h</td>
+      <td>0.017685</td>
+      <td>model_feature_importance</td>
+    </tr>
+    <tr>
+      <td>next_72h_avg</td>
+      <td>gradient_boosting</td>
+      <td>aqi_rolling_mean_6h</td>
+      <td>0.015841</td>
+      <td>model_feature_importance</td>
+    </tr>
+    <tr>
+      <td>next_72h_avg</td>
+      <td>gradient_boosting</td>
+      <td>aqi_lag_6h</td>
+      <td>0.015253</td>
+      <td>model_feature_importance</td>
+    </tr>
+    <tr>
+      <td>next_72h_avg</td>
+      <td>gradient_boosting</td>
+      <td>aqi_rolling_mean_3h</td>
+      <td>0.013451</td>
+      <td>model_feature_importance</td>
+    </tr>
+    <tr>
+      <td>next_72h_avg</td>
+      <td>gradient_boosting</td>
+      <td>future_humidity_day1_avg</td>
+      <td>0.011219</td>
+      <td>model_feature_importance</td>
+    </tr>
+    <tr>
+      <td>next_72h_avg</td>
+      <td>gradient_boosting</td>
+      <td>pm25_rolling_mean_24h</td>
+      <td>0.010659</td>
+      <td>model_feature_importance</td>
+    </tr>
+    <tr>
+      <td>next_72h_avg</td>
+      <td>gradient_boosting</td>
+      <td>aqi_rolling_mean_24h</td>
+      <td>0.008771</td>
+      <td>model_feature_importance</td>
+    </tr>
+    <tr>
+      <td>next_72h_avg</td>
+      <td>gradient_boosting</td>
+      <td>surface_pressure</td>
+      <td>0.006655</td>
+      <td>model_feature_importance</td>
+    </tr>
+  </tbody>
+</table>
+            </div>
+            
+
+            <div class="card">
+                <h2>Model Metrics Snapshot</h2>
+                <pre>{
+    "trained_at": "2026-06-05T13:45:05.242566",
+    "data_source": "Hopsworks Feature Store",
+    "feature_columns_count": 60,
+    "rows_total": 105264,
+    "targets": {
+        "day_1": {
+            "target_column": "target_aqi_day1_avg",
+            "best_model": "gradient_boosting",
+            "best_metrics": {
+                "rmse": 21.346920842674837,
+                "mae": 12.447134246186753,
+                "r2": 0.6151477394376133
+            },
+            "all_model_results": {
+                "baseline_current_aqi": {
+                    "rmse": 37.964345485562674,
+                    "mae": 22.447916666666664,
+                    "r2": -0.21723770465701642
+                },
+                "ridge": {
+                    "rmse": 28.88464455565216,
+                    "mae": 22.01627601804676,
+                    "r2": 0.29537569767642247
+                },
+                "lasso": {
+                    "rmse": 34.00493180536233,
+                    "mae": 27.933381029118973,
+                    "r2": 0.02342100476971465
+                },
+                "elastic_net": {
+                    "rmse": 30.385846497124952,
+                    "mae": 23.841196460624307,
+                    "r2": 0.22023050448604187
+                },
+                "random_forest": {
+                    "rmse": 23.551417468391357,
+                    "mae": 12.471008805027223,
+                    "r2": 0.5315560179827553
+                },
+                "extra_trees": {
+                    "rmse": 24.8752066256669,
+                    "mae": 13.413204787234053,
+                    "r2": 0.47741498011482464
+                },
+                "gradient_boosting": {
+                    "rmse": 21.346920842674837,
+                    "mae": 12.447134246186753,
+                    "r2": 0.6151477394376133
+                },
+                "hist_gradient_boosting": {
+                    "rmse": 35.2672934290423,
+                    "mae": 17.403960988710907,
+                    "r2": -0.050431713456052574
+                }
+            },
+            "train_rows": 748,
+            "test_rows": 188,
+            "total_rows": 936,
+            "test_start_time": "2026-06-05 04:00:00+00:00",
+            "test_end_time": "2026-06-06 11:00:00+00:00"
+        },
+        "day_2": {
+            "target_column": "target_aqi_day2_avg",
+            "best_model": "hist_gradient_boosting",
+            "best_metrics": {
+                "rmse": 24.71991595603672,
+                "mae": 19.848348417401105,
+                "r2": -1.140386450255209
+            },
+            "all_model_results": {
+                "baseline_current_aqi": {
+                    "rmse": 55.755460589653644,
+                    "mae": 33.849069148936174,
+                    "r2": -9.888624692954258
+                },
+                "ridge": {
+                    "rmse": 57.54100456101489,
+                    "mae": 44.809997761573015,
+                    "r2": -10.597198546953502
+                },
+                "lasso": {
+                    "rmse": 63.28121700009576,
+                    "mae": 47.51816380982915,
+                    "r2": -13.026452933147237
+                },
+                "elastic_net": {
+                    "rmse": 63.826750381700386,
+                    "mae": 49.95565542531947,
+                    "r2": -13.269333248243372
+                },
+                "random_forest": {
+                    "rmse": 29.014870464106966,
+                    "mae": 23.118387416496503,
+                    "r2": -1.9487603976109313
+                },
+                "extra_trees": {
+                    "rmse": 25.107613307155294,
+                    "mae": 19.729447251773063,
+                    "r2": -1.208050875919883
+                },
+                "gradient_boosting": {
+                    "rmse": 26.469404877547365,
+                    "mae": 21.514174572128102,
+                    "r2": -1.4540678573383552
+                },
+                "hist_gradient_boosting": {
+                    "rmse": 24.71991595603672,
+                    "mae": 19.848348417401105,
+                    "r2": -1.140386450255209
+                }
+            },
+            "train_rows": 748,
+            "test_rows": 188,
+            "total_rows": 936,
+            "test_start_time": "2026-06-05 04:00:00+00:00",
+            "test_end_time": "2026-06-06 11:00:00+00:00"
+        },
+        "day_3": {
+            "target_column": "target_aqi_day3_avg",
+            "best_model": "extra_trees",
+            "best_metrics": {
+                "rmse": 17.42282661930556,
+                "mae": 14.191373766731513,
+                "r2": 0.7188981430804684
+            },
+            "all_model_results": {
+                "baseline_current_aqi": {
+                    "rmse": 59.9666538293793,
+                    "mae": 36.91756325115259,
+                    "r2": -2.33001443549533
+                },
+                "ridge": {
+                    "rmse": 44.34067557256109,
+                    "mae": 29.726834348645472,
+                    "r2": -0.8206694134600858
+                },
+                "lasso": {
+                    "rmse": 55.14400050864179,
+                    "mae": 39.15561302354786,
+                    "r2": -1.8159375808301221
+                },
+                "elastic_net": {
+                    "rmse": 46.54068331987239,
+                    "mae": 29.78462216824069,
+                    "r2": -1.005820176925027
+                },
+                "random_forest": {
+                    "rmse": 19.694555737064604,
+                    "mae": 15.288349972531453,
+                    "r2": 0.6408144456049638
+                },
+                "extra_trees": {
+                    "rmse": 17.42282661930556,
+                    "mae": 14.191373766731513,
+                    "r2": 0.7188981430804684
+                },
+                "gradient_boosting": {
+                    "rmse": 19.19366432872089,
+                    "mae": 14.547256837676185,
+                    "r2": 0.658852435237861
+                },
+                "hist_gradient_boosting": {
+                    "rmse": 21.156273202179293,
+                    "mae": 17.99699164120814,
+                    "r2": 0.585518817632728
+                }
+            },
+            "train_rows": 748,
+            "test_rows": 188,
+            "total_rows": 936,
+            "test_start_time": "2026-06-05 04:00:00+00:00",
+            "test_end_time": "2026-06-06 11:00:00+00:00"
+        },
+        "next_72h_avg": {
+            "target_column": "target_aqi_next_72h_avg",
+            "best_model": "gradient_boosting",
+            "best_metrics": {
+                "rmse": 13.95673611981756,
+                "mae": 11.179432881284102,
+                "r2": 0.6475308093325236
+            },
+            "all_model_results": {
+                "baseline_current_aqi": {
+                    "rmse": 49.446245277970796,
+                    "mae": 28.469435938884455,
+                    "r2": -3.424050383103011
+                },
+                "ridge": {
+                    "rmse": 28.84084676032055,
+                    "mae": 23.089996236163962,
+                    "r2": -0.5051141566472115
+                },
+                "lasso": {
+                    "rmse": 32.665246298632866,
+                    "mae": 22.896532677713072,
+                    "r2": -0.9307466985009016
+                },
+                "elastic_net": {
+                    "rmse": 32.324609805212276,
+                    "mae": 24.979719030024683,
+                    "r2": -0.8906886142748442
+                },
+                "random_forest": {
+                    "rmse": 16.470006764505502,
+                    "mae": 13.019123650768467,
+                    "r2": 0.509158831117555
+                },
+                "extra_trees": {
+                    "rmse": 15.243570343528667,
+                    "mae": 11.54478873836747,
+                    "r2": 0.5795379290996661
+                },
+                "gradient_boosting": {
+                    "rmse": 13.95673611981756,
+                    "mae": 11.179432881284102,
+                    "r2": 0.6475308093325236
+                },
+                "hist_gradient_boosting": {
+                    "rmse": 16.565917143304063,
+                    "mae": 12.347908198053933,
+                    "r2": 0.5034255202563261
+                }
+            },
+            "train_rows": 748,
+            "test_rows": 188,
+            "total_rows": 936,
+            "test_start_time": "2026-06-05 04:00:00+00:00",
+            "test_end_time": "2026-06-06 11:00:00+00:00"
+        }
+    }
+}</pre>
+            </div>
+            
+        </div>
+    </body>
+    </html>
+    
