@@ -1,0 +1,646 @@
+{
+    "created_at_utc": "2026-06-08T09:12:56.985880+00:00",
+    "data_source": "Hopsworks Feature Store",
+    "model_path": "C:\\Users\\hanir\\OneDrive\\Documents\\AQI predictor\\VS Code\\models\\aqi_model.joblib",
+    "metrics_path": "C:\\Users\\hanir\\OneDrive\\Documents\\AQI predictor\\VS Code\\models\\metrics.json",
+    "feature_store_path": "C:\\Users\\hanir\\OneDrive\\Documents\\AQI predictor\\VS Code\\data\\feature_store.parquet",
+    "feature_count": 238,
+    "feature_columns": [
+        "aqi_to_pm10_ratio",
+        "aqi_to_pm25_ratio",
+        "carbon_monoxide",
+        "carbon_monoxide_lag_12h",
+        "carbon_monoxide_lag_1h",
+        "carbon_monoxide_lag_24h",
+        "carbon_monoxide_lag_3h",
+        "carbon_monoxide_lag_6h",
+        "carbon_monoxide_rolling_mean_12h",
+        "carbon_monoxide_rolling_mean_24h",
+        "carbon_monoxide_rolling_mean_3h",
+        "carbon_monoxide_rolling_mean_48h",
+        "carbon_monoxide_rolling_mean_6h",
+        "carbon_monoxide_rolling_std_12h",
+        "carbon_monoxide_rolling_std_24h",
+        "carbon_monoxide_rolling_std_3h",
+        "carbon_monoxide_rolling_std_48h",
+        "carbon_monoxide_rolling_std_6h",
+        "city_Abu Dhabi",
+        "city_Ajman",
+        "city_Al Ain",
+        "city_Dubai",
+        "city_Ras Al Khaimah",
+        "city_Sharjah",
+        "city_id",
+        "day_of_month",
+        "day_of_week",
+        "day_of_week_cos",
+        "day_of_week_sin",
+        "dust",
+        "dust_lag_12h",
+        "dust_lag_1h",
+        "dust_lag_24h",
+        "dust_lag_3h",
+        "dust_lag_6h",
+        "dust_rolling_mean_12h",
+        "dust_rolling_mean_24h",
+        "dust_rolling_mean_3h",
+        "dust_rolling_mean_48h",
+        "dust_rolling_mean_6h",
+        "dust_rolling_std_12h",
+        "dust_rolling_std_24h",
+        "dust_rolling_std_3h",
+        "dust_rolling_std_48h",
+        "dust_rolling_std_6h",
+        "future_humidity_day1_avg",
+        "future_humidity_day2_avg",
+        "future_humidity_day3_avg",
+        "future_precip_day1_sum",
+        "future_precip_day2_sum",
+        "future_precip_day3_sum",
+        "future_pressure_day1_avg",
+        "future_pressure_day2_avg",
+        "future_pressure_day3_avg",
+        "future_temp_day1_avg",
+        "future_temp_day2_avg",
+        "future_temp_day3_avg",
+        "future_wind_day1_avg",
+        "future_wind_day1_max",
+        "future_wind_day2_avg",
+        "future_wind_day2_max",
+        "future_wind_day3_avg",
+        "future_wind_day3_max",
+        "hour",
+        "hour_cos",
+        "hour_sin",
+        "humidity_pm25_interaction",
+        "is_weekend",
+        "latitude",
+        "longitude",
+        "month",
+        "nitrogen_dioxide",
+        "nitrogen_dioxide_lag_12h",
+        "nitrogen_dioxide_lag_1h",
+        "nitrogen_dioxide_lag_24h",
+        "nitrogen_dioxide_lag_3h",
+        "nitrogen_dioxide_lag_6h",
+        "nitrogen_dioxide_rolling_mean_12h",
+        "nitrogen_dioxide_rolling_mean_24h",
+        "nitrogen_dioxide_rolling_mean_3h",
+        "nitrogen_dioxide_rolling_mean_48h",
+        "nitrogen_dioxide_rolling_mean_6h",
+        "nitrogen_dioxide_rolling_std_12h",
+        "nitrogen_dioxide_rolling_std_24h",
+        "nitrogen_dioxide_rolling_std_3h",
+        "nitrogen_dioxide_rolling_std_48h",
+        "nitrogen_dioxide_rolling_std_6h",
+        "ozone",
+        "ozone_lag_12h",
+        "ozone_lag_1h",
+        "ozone_lag_24h",
+        "ozone_lag_3h",
+        "ozone_lag_6h",
+        "ozone_rolling_mean_12h",
+        "ozone_rolling_mean_24h",
+        "ozone_rolling_mean_3h",
+        "ozone_rolling_mean_48h",
+        "ozone_rolling_mean_6h",
+        "ozone_rolling_std_12h",
+        "ozone_rolling_std_24h",
+        "ozone_rolling_std_3h",
+        "ozone_rolling_std_48h",
+        "ozone_rolling_std_6h",
+        "pm10",
+        "pm10_lag_12h",
+        "pm10_lag_1h",
+        "pm10_lag_24h",
+        "pm10_lag_3h",
+        "pm10_lag_6h",
+        "pm10_rolling_mean_12h",
+        "pm10_rolling_mean_24h",
+        "pm10_rolling_mean_3h",
+        "pm10_rolling_mean_48h",
+        "pm10_rolling_mean_6h",
+        "pm10_rolling_std_12h",
+        "pm10_rolling_std_24h",
+        "pm10_rolling_std_3h",
+        "pm10_rolling_std_48h",
+        "pm10_rolling_std_6h",
+        "pm25_to_pm10_ratio",
+        "pm2_5",
+        "pm2_5_lag_12h",
+        "pm2_5_lag_1h",
+        "pm2_5_lag_24h",
+        "pm2_5_lag_3h",
+        "pm2_5_lag_6h",
+        "pm2_5_rolling_mean_12h",
+        "pm2_5_rolling_mean_24h",
+        "pm2_5_rolling_mean_3h",
+        "pm2_5_rolling_mean_48h",
+        "pm2_5_rolling_mean_6h",
+        "pm2_5_rolling_std_12h",
+        "pm2_5_rolling_std_24h",
+        "pm2_5_rolling_std_3h",
+        "pm2_5_rolling_std_48h",
+        "pm2_5_rolling_std_6h",
+        "precipitation",
+        "pressure_wind_interaction",
+        "relative_humidity_2m",
+        "relative_humidity_2m_lag_12h",
+        "relative_humidity_2m_lag_1h",
+        "relative_humidity_2m_lag_24h",
+        "relative_humidity_2m_lag_3h",
+        "relative_humidity_2m_lag_6h",
+        "relative_humidity_2m_rolling_mean_12h",
+        "relative_humidity_2m_rolling_mean_24h",
+        "relative_humidity_2m_rolling_mean_3h",
+        "relative_humidity_2m_rolling_mean_48h",
+        "relative_humidity_2m_rolling_mean_6h",
+        "relative_humidity_2m_rolling_std_12h",
+        "relative_humidity_2m_rolling_std_24h",
+        "relative_humidity_2m_rolling_std_3h",
+        "relative_humidity_2m_rolling_std_48h",
+        "relative_humidity_2m_rolling_std_6h",
+        "sulphur_dioxide",
+        "sulphur_dioxide_lag_12h",
+        "sulphur_dioxide_lag_1h",
+        "sulphur_dioxide_lag_24h",
+        "sulphur_dioxide_lag_3h",
+        "sulphur_dioxide_lag_6h",
+        "sulphur_dioxide_rolling_mean_12h",
+        "sulphur_dioxide_rolling_mean_24h",
+        "sulphur_dioxide_rolling_mean_3h",
+        "sulphur_dioxide_rolling_mean_48h",
+        "sulphur_dioxide_rolling_mean_6h",
+        "sulphur_dioxide_rolling_std_12h",
+        "sulphur_dioxide_rolling_std_24h",
+        "sulphur_dioxide_rolling_std_3h",
+        "sulphur_dioxide_rolling_std_48h",
+        "sulphur_dioxide_rolling_std_6h",
+        "surface_pressure",
+        "surface_pressure_lag_12h",
+        "surface_pressure_lag_1h",
+        "surface_pressure_lag_24h",
+        "surface_pressure_lag_3h",
+        "surface_pressure_lag_6h",
+        "surface_pressure_rolling_mean_12h",
+        "surface_pressure_rolling_mean_24h",
+        "surface_pressure_rolling_mean_3h",
+        "surface_pressure_rolling_mean_48h",
+        "surface_pressure_rolling_mean_6h",
+        "surface_pressure_rolling_std_12h",
+        "surface_pressure_rolling_std_24h",
+        "surface_pressure_rolling_std_3h",
+        "surface_pressure_rolling_std_48h",
+        "surface_pressure_rolling_std_6h",
+        "temp_humidity_interaction",
+        "temperature_2m",
+        "temperature_2m_lag_12h",
+        "temperature_2m_lag_1h",
+        "temperature_2m_lag_24h",
+        "temperature_2m_lag_3h",
+        "temperature_2m_lag_6h",
+        "temperature_2m_rolling_mean_12h",
+        "temperature_2m_rolling_mean_24h",
+        "temperature_2m_rolling_mean_3h",
+        "temperature_2m_rolling_mean_48h",
+        "temperature_2m_rolling_mean_6h",
+        "temperature_2m_rolling_std_12h",
+        "temperature_2m_rolling_std_24h",
+        "temperature_2m_rolling_std_3h",
+        "temperature_2m_rolling_std_48h",
+        "temperature_2m_rolling_std_6h",
+        "us_aqi",
+        "us_aqi_lag_12h",
+        "us_aqi_lag_1h",
+        "us_aqi_lag_24h",
+        "us_aqi_lag_3h",
+        "us_aqi_lag_6h",
+        "us_aqi_rolling_mean_12h",
+        "us_aqi_rolling_mean_24h",
+        "us_aqi_rolling_mean_3h",
+        "us_aqi_rolling_mean_48h",
+        "us_aqi_rolling_mean_6h",
+        "us_aqi_rolling_std_12h",
+        "us_aqi_rolling_std_24h",
+        "us_aqi_rolling_std_3h",
+        "us_aqi_rolling_std_48h",
+        "us_aqi_rolling_std_6h",
+        "wind_direction_10m",
+        "wind_pm10_interaction",
+        "wind_pm25_interaction",
+        "wind_speed_10m",
+        "wind_speed_10m_lag_12h",
+        "wind_speed_10m_lag_1h",
+        "wind_speed_10m_lag_24h",
+        "wind_speed_10m_lag_3h",
+        "wind_speed_10m_lag_6h",
+        "wind_speed_10m_rolling_mean_12h",
+        "wind_speed_10m_rolling_mean_24h",
+        "wind_speed_10m_rolling_mean_3h",
+        "wind_speed_10m_rolling_mean_48h",
+        "wind_speed_10m_rolling_mean_6h",
+        "wind_speed_10m_rolling_std_12h",
+        "wind_speed_10m_rolling_std_24h",
+        "wind_speed_10m_rolling_std_3h",
+        "wind_speed_10m_rolling_std_48h",
+        "wind_speed_10m_rolling_std_6h"
+    ],
+    "targets": {
+        "day_1": {
+            "target_key": "day_1",
+            "target_column": "target_aqi_day1_avg",
+            "label": "Day 1 AQI Average",
+            "best_model": "ridge",
+            "best_metrics": {
+                "rmse": 20.548872531488406,
+                "mae": 11.680373827320876,
+                "r2": 0.8635038940410988
+            },
+            "all_models": {
+                "baseline_current_aqi": {
+                    "rmse": 60.50003877503826,
+                    "mae": 34.53134784131152,
+                    "r2": -0.18319294502750805
+                },
+                "ridge": {
+                    "rmse": 20.548872531488406,
+                    "mae": 11.680373827320876,
+                    "r2": 0.8635038940410988
+                },
+                "elastic_net": {
+                    "rmse": 20.714851054610655,
+                    "mae": 11.681213292714018,
+                    "r2": 0.8612899605148998
+                },
+                "random_forest": {
+                    "rmse": 22.436196149907925,
+                    "mae": 11.943098659882704,
+                    "r2": 0.8372793307207612
+                },
+                "extra_trees": {
+                    "rmse": 21.341207039164495,
+                    "mae": 11.433401015298786,
+                    "r2": 0.8527747760480191
+                },
+                "gradient_boosting": {
+                    "rmse": 21.026565349449815,
+                    "mae": 11.429387631275201,
+                    "r2": 0.8570839711886167
+                },
+                "hist_gradient_boosting": {
+                    "rmse": 20.58010211525045,
+                    "mae": 11.274482073804329,
+                    "r2": 0.8630886930859567
+                },
+                "xgboost": {
+                    "rmse": 20.931216131575166,
+                    "mae": 11.359930653391602,
+                    "r2": 0.8583771956694407
+                }
+            },
+            "all_model_results": {
+                "baseline_current_aqi": {
+                    "rmse": 60.50003877503826,
+                    "mae": 34.53134784131152,
+                    "r2": -0.18319294502750805
+                },
+                "ridge": {
+                    "rmse": 20.548872531488406,
+                    "mae": 11.680373827320876,
+                    "r2": 0.8635038940410988
+                },
+                "elastic_net": {
+                    "rmse": 20.714851054610655,
+                    "mae": 11.681213292714018,
+                    "r2": 0.8612899605148998
+                },
+                "random_forest": {
+                    "rmse": 22.436196149907925,
+                    "mae": 11.943098659882704,
+                    "r2": 0.8372793307207612
+                },
+                "extra_trees": {
+                    "rmse": 21.341207039164495,
+                    "mae": 11.433401015298786,
+                    "r2": 0.8527747760480191
+                },
+                "gradient_boosting": {
+                    "rmse": 21.026565349449815,
+                    "mae": 11.429387631275201,
+                    "r2": 0.8570839711886167
+                },
+                "hist_gradient_boosting": {
+                    "rmse": 20.58010211525045,
+                    "mae": 11.274482073804329,
+                    "r2": 0.8630886930859567
+                },
+                "xgboost": {
+                    "rmse": 20.931216131575166,
+                    "mae": 11.359930653391602,
+                    "r2": 0.8583771956694407
+                }
+            },
+            "train_rows": 84441,
+            "test_rows": 21111,
+            "clean_rows": 105552,
+            "feature_count": 238
+        },
+        "day_2": {
+            "target_key": "day_2",
+            "target_column": "target_aqi_day2_avg",
+            "label": "Day 2 AQI Average",
+            "best_model": "ridge",
+            "best_metrics": {
+                "rmse": 41.77913487413712,
+                "mae": 24.34788367995906,
+                "r2": 0.44473431321811996
+            },
+            "all_models": {
+                "baseline_current_aqi": {
+                    "rmse": 63.067514410633386,
+                    "mae": 36.615046308145565,
+                    "r2": -0.265299630876354
+                },
+                "ridge": {
+                    "rmse": 41.77913487413712,
+                    "mae": 24.34788367995906,
+                    "r2": 0.44473431321811996
+                },
+                "elastic_net": {
+                    "rmse": 41.80836108232111,
+                    "mae": 24.255617022656782,
+                    "r2": 0.443957179522525
+                },
+                "random_forest": {
+                    "rmse": 45.358711900856555,
+                    "mae": 26.830110477253935,
+                    "r2": 0.345509454918569
+                },
+                "extra_trees": {
+                    "rmse": 43.99983484900972,
+                    "mae": 26.02218716108869,
+                    "r2": 0.38413709826187736
+                },
+                "gradient_boosting": {
+                    "rmse": 43.80085181535121,
+                    "mae": 25.598499516644555,
+                    "r2": 0.3896948086413169
+                },
+                "hist_gradient_boosting": {
+                    "rmse": 45.195548604693116,
+                    "mae": 26.640527206146594,
+                    "r2": 0.35020962214239926
+                },
+                "xgboost": {
+                    "rmse": 43.44852641563436,
+                    "mae": 25.65791918475745,
+                    "r2": 0.3994736690151244
+                }
+            },
+            "all_model_results": {
+                "baseline_current_aqi": {
+                    "rmse": 63.067514410633386,
+                    "mae": 36.615046308145565,
+                    "r2": -0.265299630876354
+                },
+                "ridge": {
+                    "rmse": 41.77913487413712,
+                    "mae": 24.34788367995906,
+                    "r2": 0.44473431321811996
+                },
+                "elastic_net": {
+                    "rmse": 41.80836108232111,
+                    "mae": 24.255617022656782,
+                    "r2": 0.443957179522525
+                },
+                "random_forest": {
+                    "rmse": 45.358711900856555,
+                    "mae": 26.830110477253935,
+                    "r2": 0.345509454918569
+                },
+                "extra_trees": {
+                    "rmse": 43.99983484900972,
+                    "mae": 26.02218716108869,
+                    "r2": 0.38413709826187736
+                },
+                "gradient_boosting": {
+                    "rmse": 43.80085181535121,
+                    "mae": 25.598499516644555,
+                    "r2": 0.3896948086413169
+                },
+                "hist_gradient_boosting": {
+                    "rmse": 45.195548604693116,
+                    "mae": 26.640527206146594,
+                    "r2": 0.35020962214239926
+                },
+                "xgboost": {
+                    "rmse": 43.44852641563436,
+                    "mae": 25.65791918475745,
+                    "r2": 0.3994736690151244
+                }
+            },
+            "train_rows": 84441,
+            "test_rows": 21111,
+            "clean_rows": 105552,
+            "feature_count": 238
+        },
+        "day_3": {
+            "target_key": "day_3",
+            "target_column": "target_aqi_day3_avg",
+            "label": "Day 3 AQI Average",
+            "best_model": "xgboost",
+            "best_metrics": {
+                "rmse": 45.19663969491445,
+                "mae": 27.754143607400106,
+                "r2": 0.35856049251118394
+            },
+            "all_models": {
+                "baseline_current_aqi": {
+                    "rmse": 82.37382526993458,
+                    "mae": 60.30185650188343,
+                    "r2": -1.1306979112777484
+                },
+                "ridge": {
+                    "rmse": 45.40816295782873,
+                    "mae": 26.928563025706428,
+                    "r2": 0.3525424844143702
+                },
+                "elastic_net": {
+                    "rmse": 45.26859799241241,
+                    "mae": 26.802619278396204,
+                    "r2": 0.3565163742410524
+                },
+                "random_forest": {
+                    "rmse": 47.4835654720295,
+                    "mae": 29.072806649880967,
+                    "r2": 0.29200521970017346
+                },
+                "extra_trees": {
+                    "rmse": 45.701859547028405,
+                    "mae": 27.89106300364715,
+                    "r2": 0.34413998543066426
+                },
+                "gradient_boosting": {
+                    "rmse": 45.581696206926914,
+                    "mae": 27.78575538852856,
+                    "r2": 0.34758434079176337
+                },
+                "hist_gradient_boosting": {
+                    "rmse": 46.25384659983072,
+                    "mae": 28.204278486992642,
+                    "r2": 0.32820135551415286
+                },
+                "xgboost": {
+                    "rmse": 45.19663969491445,
+                    "mae": 27.754143607400106,
+                    "r2": 0.35856049251118394
+                }
+            },
+            "all_model_results": {
+                "baseline_current_aqi": {
+                    "rmse": 82.37382526993458,
+                    "mae": 60.30185650188343,
+                    "r2": -1.1306979112777484
+                },
+                "ridge": {
+                    "rmse": 45.40816295782873,
+                    "mae": 26.928563025706428,
+                    "r2": 0.3525424844143702
+                },
+                "elastic_net": {
+                    "rmse": 45.26859799241241,
+                    "mae": 26.802619278396204,
+                    "r2": 0.3565163742410524
+                },
+                "random_forest": {
+                    "rmse": 47.4835654720295,
+                    "mae": 29.072806649880967,
+                    "r2": 0.29200521970017346
+                },
+                "extra_trees": {
+                    "rmse": 45.701859547028405,
+                    "mae": 27.89106300364715,
+                    "r2": 0.34413998543066426
+                },
+                "gradient_boosting": {
+                    "rmse": 45.581696206926914,
+                    "mae": 27.78575538852856,
+                    "r2": 0.34758434079176337
+                },
+                "hist_gradient_boosting": {
+                    "rmse": 46.25384659983072,
+                    "mae": 28.204278486992642,
+                    "r2": 0.32820135551415286
+                },
+                "xgboost": {
+                    "rmse": 45.19663969491445,
+                    "mae": 27.754143607400106,
+                    "r2": 0.35856049251118394
+                }
+            },
+            "train_rows": 84441,
+            "test_rows": 21111,
+            "clean_rows": 105552,
+            "feature_count": 238
+        },
+        "next_72h_avg": {
+            "target_key": "next_72h_avg",
+            "target_column": "target_aqi_next_72h_avg",
+            "label": "Next 72 Hours AQI Average",
+            "best_model": "elastic_net",
+            "best_metrics": {
+                "rmse": 29.3613241519748,
+                "mae": 17.531269596431105,
+                "r2": 0.6464783282429577
+            },
+            "all_models": {
+                "baseline_current_aqi": {
+                    "rmse": 62.017649824864435,
+                    "mae": 40.051237902706255,
+                    "r2": -0.5772312594764135
+                },
+                "ridge": {
+                    "rmse": 29.367212228900268,
+                    "mae": 17.607883101956478,
+                    "r2": 0.6463365245896806
+                },
+                "elastic_net": {
+                    "rmse": 29.3613241519748,
+                    "mae": 17.531269596431105,
+                    "r2": 0.6464783282429577
+                },
+                "random_forest": {
+                    "rmse": 32.65671600980502,
+                    "mae": 19.938595776359836,
+                    "r2": 0.5626694806237245
+                },
+                "extra_trees": {
+                    "rmse": 31.090247585725656,
+                    "mae": 18.78244814256239,
+                    "r2": 0.6036187271549465
+                },
+                "gradient_boosting": {
+                    "rmse": 30.60266159423866,
+                    "mae": 18.351683645301208,
+                    "r2": 0.6159540703443904
+                },
+                "hist_gradient_boosting": {
+                    "rmse": 31.798601420963518,
+                    "mae": 19.123454269644697,
+                    "r2": 0.5853508255884485
+                },
+                "xgboost": {
+                    "rmse": 30.314352855644056,
+                    "mae": 18.157289726547162,
+                    "r2": 0.623156204108436
+                }
+            },
+            "all_model_results": {
+                "baseline_current_aqi": {
+                    "rmse": 62.017649824864435,
+                    "mae": 40.051237902706255,
+                    "r2": -0.5772312594764135
+                },
+                "ridge": {
+                    "rmse": 29.367212228900268,
+                    "mae": 17.607883101956478,
+                    "r2": 0.6463365245896806
+                },
+                "elastic_net": {
+                    "rmse": 29.3613241519748,
+                    "mae": 17.531269596431105,
+                    "r2": 0.6464783282429577
+                },
+                "random_forest": {
+                    "rmse": 32.65671600980502,
+                    "mae": 19.938595776359836,
+                    "r2": 0.5626694806237245
+                },
+                "extra_trees": {
+                    "rmse": 31.090247585725656,
+                    "mae": 18.78244814256239,
+                    "r2": 0.6036187271549465
+                },
+                "gradient_boosting": {
+                    "rmse": 30.60266159423866,
+                    "mae": 18.351683645301208,
+                    "r2": 0.6159540703443904
+                },
+                "hist_gradient_boosting": {
+                    "rmse": 31.798601420963518,
+                    "mae": 19.123454269644697,
+                    "r2": 0.5853508255884485
+                },
+                "xgboost": {
+                    "rmse": 30.314352855644056,
+                    "mae": 18.157289726547162,
+                    "r2": 0.623156204108436
+                }
+            },
+            "train_rows": 84441,
+            "test_rows": 21111,
+            "clean_rows": 105552,
+            "feature_count": 238
+        }
+    }
+}

@@ -1,25 +1,26 @@
 import argparse
-import time
 from datetime import datetime, timedelta
+from pathlib import Path
 
+import numpy as np
 import pandas as pd
 import requests
 
-from config import (
-    FEATURE_STORE_PATH,
-    UAE_LOCATIONS,
-    TARGET_COLUMNS,
-)
-
+from config import FEATURE_STORE_PATH
 from hopsworks_store import save_features_to_hopsworks
 
 
-AIR_QUALITY_URL = "https://air-quality-api.open-meteo.com/v1/air-quality"
-WEATHER_FORECAST_URL = "https://api.open-meteo.com/v1/forecast"
-WEATHER_ARCHIVE_URL = "https://archive-api.open-meteo.com/v1/archive"
+CITY_LOCATIONS = {
+    "Abu Dhabi": {"latitude": 24.4539, "longitude": 54.3773},
+    "Ajman": {"latitude": 25.4052, "longitude": 55.5136},
+    "Al Ain": {"latitude": 24.1302, "longitude": 55.8023},
+    "Dubai": {"latitude": 25.2048, "longitude": 55.2708},
+    "Ras Al Khaimah": {"latitude": 25.8007, "longitude": 55.9762},
+    "Sharjah": {"latitude": 25.3463, "longitude": 55.4209},
+}
 
 
-AQI_HOURLY_VARIABLES = [
+AIR_QUALITY_HOURLY_COLUMNS = [
     "us_aqi",
     "pm10",
     "pm2_5",
@@ -31,7 +32,7 @@ AQI_HOURLY_VARIABLES = [
 ]
 
 
-WEATHER_HOURLY_VARIABLES = [
+WEATHER_HOURLY_COLUMNS = [
     "temperature_2m",
     "relative_humidity_2m",
     "precipitation",
@@ -41,388 +42,796 @@ WEATHER_HOURLY_VARIABLES = [
 ]
 
 
-def request_json(url: str, params: dict, max_retries: int = 3) -> dict:
-    last_error = None
-
-    for attempt in range(max_retries):
-        try:
-            response = requests.get(url, params=params, timeout=60)
-
-            if response.status_code in [429, 500, 502, 503, 504]:
-                print(
-                    f"Temporary API error {response.status_code}. "
-                    f"Attempt {attempt + 1}/{max_retries}. Retrying..."
-                )
-                time.sleep(2 + attempt * 3)
-                continue
-
-            response.raise_for_status()
-            return response.json()
-
-        except Exception as error:
-            last_error = error
-            print(f"API request failed. Attempt {attempt + 1}/{max_retries}. Error: {error}")
-            time.sleep(2 + attempt * 3)
-
-    raise RuntimeError(f"API request failed after {max_retries} attempts: {last_error}")
+POLLUTANT_COLUMNS = [
+    "pm10",
+    "pm2_5",
+    "carbon_monoxide",
+    "nitrogen_dioxide",
+    "sulphur_dioxide",
+    "ozone",
+    "dust",
+]
 
 
-def fetch_air_quality(
+LAG_COLUMNS = [
+    "us_aqi",
+    "pm10",
+    "pm2_5",
+    "carbon_monoxide",
+    "nitrogen_dioxide",
+    "sulphur_dioxide",
+    "ozone",
+    "dust",
+    "temperature_2m",
+    "relative_humidity_2m",
+    "surface_pressure",
+    "wind_speed_10m",
+]
+
+
+ROLLING_COLUMNS = [
+    "us_aqi",
+    "pm10",
+    "pm2_5",
+    "carbon_monoxide",
+    "nitrogen_dioxide",
+    "sulphur_dioxide",
+    "ozone",
+    "dust",
+    "temperature_2m",
+    "relative_humidity_2m",
+    "surface_pressure",
+    "wind_speed_10m",
+]
+
+
+LAG_HOURS = [1, 3, 6, 12, 24]
+ROLLING_WINDOWS = [3, 6, 12, 24, 48]
+
+
+def parse_args():
+    parser = argparse.ArgumentParser(description="UAE AQI feature pipeline")
+
+    parser.add_argument("--latitude", type=float, default=None)
+    parser.add_argument("--longitude", type=float, default=None)
+    parser.add_argument("--timezone", type=str, default="Asia/Dubai")
+    parser.add_argument("--past-days", type=int, default=10)
+    parser.add_argument("--forecast-days", type=int, default=3)
+    parser.add_argument("--start-date", type=str, default=None)
+    parser.add_argument("--end-date", type=str, default=None)
+    parser.add_argument("--skip-hopsworks", action="store_true")
+
+    return parser.parse_args()
+
+
+def safe_request_json(url: str, params: dict, timeout: int = 45):
+    try:
+        response = requests.get(url, params=params, timeout=timeout)
+        response.raise_for_status()
+        return response.json()
+
+    except Exception as error:
+        print(f"Request failed for {url}")
+        print(error)
+        return None
+
+
+def fetch_air_quality_data(
     latitude: float,
     longitude: float,
-    timezone: str,
+    timezone: str = "Asia/Dubai",
+    past_days: int = 10,
+    forecast_days: int = 3,
     start_date: str | None = None,
     end_date: str | None = None,
-    past_days: int | None = None,
-    forecast_days: int = 4,
 ) -> pd.DataFrame:
+    url = "https://air-quality-api.open-meteo.com/v1/air-quality"
+
     params = {
         "latitude": latitude,
         "longitude": longitude,
         "timezone": timezone,
-        "hourly": ",".join(AQI_HOURLY_VARIABLES),
-        "forecast_days": forecast_days,
+        "hourly": ",".join(AIR_QUALITY_HOURLY_COLUMNS),
     }
 
     if start_date and end_date:
         params["start_date"] = start_date
         params["end_date"] = end_date
-    elif past_days is not None:
+    else:
         params["past_days"] = past_days
+        params["forecast_days"] = forecast_days
 
-    payload = request_json(AIR_QUALITY_URL, params=params)
-    hourly = payload.get("hourly", {})
+    data = safe_request_json(url, params)
 
-    if not hourly or "time" not in hourly:
-        raise ValueError(f"Unexpected AQI API response: {payload}")
+    if not data or "hourly" not in data:
+        return pd.DataFrame()
 
-    df = pd.DataFrame(hourly)
-    df["time"] = pd.to_datetime(df["time"])
-    df["latitude"] = float(latitude)
-    df["longitude"] = float(longitude)
+    df = pd.DataFrame(data["hourly"])
 
-    return df.sort_values("time").reset_index(drop=True)
+    if df.empty:
+        return df
+
+    df["time"] = pd.to_datetime(df["time"], errors="coerce")
+    df["latitude"] = round(float(latitude), 4)
+    df["longitude"] = round(float(longitude), 4)
+
+    return df
 
 
-def fetch_weather(
+def fetch_weather_data(
     latitude: float,
     longitude: float,
-    timezone: str,
+    timezone: str = "Asia/Dubai",
+    past_days: int = 10,
+    forecast_days: int = 3,
     start_date: str | None = None,
     end_date: str | None = None,
-    past_days: int | None = None,
-    forecast_days: int = 4,
 ) -> pd.DataFrame:
-    use_archive = start_date is not None and end_date is not None
+    url = "https://api.open-meteo.com/v1/forecast"
 
-    if use_archive:
-        url = WEATHER_ARCHIVE_URL
-        params = {
-            "latitude": latitude,
-            "longitude": longitude,
-            "timezone": timezone,
-            "start_date": start_date,
-            "end_date": end_date,
-            "hourly": ",".join(WEATHER_HOURLY_VARIABLES),
-        }
+    hourly_columns = WEATHER_HOURLY_COLUMNS.copy()
+
+    params = {
+        "latitude": latitude,
+        "longitude": longitude,
+        "timezone": timezone,
+        "hourly": ",".join(hourly_columns),
+    }
+
+    if start_date and end_date:
+        params["start_date"] = start_date
+        params["end_date"] = end_date
     else:
-        url = WEATHER_FORECAST_URL
-        params = {
-            "latitude": latitude,
-            "longitude": longitude,
-            "timezone": timezone,
-            "past_days": past_days if past_days is not None else 92,
-            "forecast_days": forecast_days,
-            "hourly": ",".join(WEATHER_HOURLY_VARIABLES),
-        }
+        params["past_days"] = past_days
+        params["forecast_days"] = forecast_days
 
-    payload = request_json(url, params=params)
-    hourly = payload.get("hourly", {})
+    data = safe_request_json(url, params)
 
-    if not hourly or "time" not in hourly:
-        raise ValueError(f"Unexpected weather API response: {payload}")
+    if not data or "hourly" not in data:
+        return pd.DataFrame()
 
-    df = pd.DataFrame(hourly)
-    df["time"] = pd.to_datetime(df["time"])
-    df["latitude"] = float(latitude)
-    df["longitude"] = float(longitude)
+    df = pd.DataFrame(data["hourly"])
 
-    return df.sort_values("time").reset_index(drop=True)
+    if df.empty:
+        return df
 
-
-def forward_rolling_mean(series: pd.Series, start_hour: int, window_hours: int, min_periods: int = 12) -> pd.Series:
-    future_series = series.shift(-start_hour)
-    return (
-        future_series
-        .iloc[::-1]
-        .rolling(window=window_hours, min_periods=min_periods)
-        .mean()
-        .iloc[::-1]
-    )
-
-
-def forward_rolling_max(series: pd.Series, start_hour: int, window_hours: int, min_periods: int = 12) -> pd.Series:
-    future_series = series.shift(-start_hour)
-    return (
-        future_series
-        .iloc[::-1]
-        .rolling(window=window_hours, min_periods=min_periods)
-        .max()
-        .iloc[::-1]
-    )
-
-
-def forward_rolling_sum(series: pd.Series, start_hour: int, window_hours: int, min_periods: int = 12) -> pd.Series:
-    future_series = series.shift(-start_hour)
-    return (
-        future_series
-        .iloc[::-1]
-        .rolling(window=window_hours, min_periods=min_periods)
-        .sum()
-        .iloc[::-1]
-    )
-
-
-def merge_air_quality_and_weather(aqi_df: pd.DataFrame, weather_df: pd.DataFrame) -> pd.DataFrame:
-    merge_columns = ["time", "latitude", "longitude"]
-
-    df = pd.merge(
-        aqi_df,
-        weather_df,
-        on=merge_columns,
-        how="left",
-    )
-
-    df = df.sort_values("time").reset_index(drop=True)
+    df["time"] = pd.to_datetime(df["time"], errors="coerce")
+    df["latitude"] = round(float(latitude), 4)
+    df["longitude"] = round(float(longitude), 4)
 
     return df
 
 
-def make_features_for_location(df: pd.DataFrame, city: str) -> pd.DataFrame:
-    df = df.copy().sort_values("time").reset_index(drop=True)
-
-    df["city"] = city
-
-    df["location_key"] = (
-        df["latitude"].round(4).astype(str)
-        + "_"
-        + df["longitude"].round(4).astype(str)
-    )
-
-    df["hour"] = df["time"].dt.hour
-    df["day"] = df["time"].dt.day
-    df["month"] = df["time"].dt.month
-    df["dayofweek"] = df["time"].dt.dayofweek
-
-    df["aqi_lag_1h"] = df["us_aqi"].shift(1)
-    df["aqi_lag_3h"] = df["us_aqi"].shift(3)
-    df["aqi_lag_6h"] = df["us_aqi"].shift(6)
-    df["aqi_lag_12h"] = df["us_aqi"].shift(12)
-    df["aqi_lag_24h"] = df["us_aqi"].shift(24)
-
-    df["pm25_lag_24h"] = df["pm2_5"].shift(24)
-    df["pm10_lag_24h"] = df["pm10"].shift(24)
-
-    df["aqi_rolling_mean_3h"] = df["us_aqi"].rolling(3, min_periods=2).mean()
-    df["aqi_rolling_mean_6h"] = df["us_aqi"].rolling(6, min_periods=3).mean()
-    df["aqi_rolling_mean_12h"] = df["us_aqi"].rolling(12, min_periods=6).mean()
-    df["aqi_rolling_mean_24h"] = df["us_aqi"].rolling(24, min_periods=12).mean()
-
-    df["pm25_rolling_mean_24h"] = df["pm2_5"].rolling(24, min_periods=12).mean()
-    df["pm10_rolling_mean_24h"] = df["pm10"].rolling(24, min_periods=12).mean()
-    df["ozone_rolling_mean_24h"] = df["ozone"].rolling(24, min_periods=12).mean()
-    df["wind_speed_rolling_mean_24h"] = df["wind_speed_10m"].rolling(24, min_periods=12).mean()
-    df["pressure_rolling_mean_24h"] = df["surface_pressure"].rolling(24, min_periods=12).mean()
-
-    df["aqi_change_rate_1h"] = df["us_aqi"].diff(1)
-    df["aqi_change_rate_3h"] = df["us_aqi"].diff(3)
-    df["aqi_change_rate_24h"] = df["us_aqi"].diff(24)
-
-    df["future_temp_day1_avg"] = forward_rolling_mean(df["temperature_2m"], 1, 24)
-    df["future_temp_day2_avg"] = forward_rolling_mean(df["temperature_2m"], 25, 24)
-    df["future_temp_day3_avg"] = forward_rolling_mean(df["temperature_2m"], 49, 24)
-
-    df["future_humidity_day1_avg"] = forward_rolling_mean(df["relative_humidity_2m"], 1, 24)
-    df["future_humidity_day2_avg"] = forward_rolling_mean(df["relative_humidity_2m"], 25, 24)
-    df["future_humidity_day3_avg"] = forward_rolling_mean(df["relative_humidity_2m"], 49, 24)
-
-    df["future_wind_day1_avg"] = forward_rolling_mean(df["wind_speed_10m"], 1, 24)
-    df["future_wind_day2_avg"] = forward_rolling_mean(df["wind_speed_10m"], 25, 24)
-    df["future_wind_day3_avg"] = forward_rolling_mean(df["wind_speed_10m"], 49, 24)
-
-    df["future_wind_day1_max"] = forward_rolling_max(df["wind_speed_10m"], 1, 24)
-    df["future_wind_day2_max"] = forward_rolling_max(df["wind_speed_10m"], 25, 24)
-    df["future_wind_day3_max"] = forward_rolling_max(df["wind_speed_10m"], 49, 24)
-
-    df["future_wind_direction_day1_avg"] = forward_rolling_mean(df["wind_direction_10m"], 1, 24)
-    df["future_wind_direction_day2_avg"] = forward_rolling_mean(df["wind_direction_10m"], 25, 24)
-    df["future_wind_direction_day3_avg"] = forward_rolling_mean(df["wind_direction_10m"], 49, 24)
-
-    df["future_pressure_day1_avg"] = forward_rolling_mean(df["surface_pressure"], 1, 24)
-    df["future_pressure_day2_avg"] = forward_rolling_mean(df["surface_pressure"], 25, 24)
-    df["future_pressure_day3_avg"] = forward_rolling_mean(df["surface_pressure"], 49, 24)
-
-    df["future_precip_day1_sum"] = forward_rolling_sum(df["precipitation"], 1, 24)
-    df["future_precip_day2_sum"] = forward_rolling_sum(df["precipitation"], 25, 24)
-    df["future_precip_day3_sum"] = forward_rolling_sum(df["precipitation"], 49, 24)
-
-    df[TARGET_COLUMNS["day_1"]] = forward_rolling_mean(df["us_aqi"], 1, 24)
-    df[TARGET_COLUMNS["day_2"]] = forward_rolling_mean(df["us_aqi"], 25, 24)
-    df[TARGET_COLUMNS["day_3"]] = forward_rolling_mean(df["us_aqi"], 49, 24)
-    df[TARGET_COLUMNS["next_72h_avg"]] = forward_rolling_mean(df["us_aqi"], 1, 72, min_periods=36)
-
-    df = df.replace([float("inf"), float("-inf")], pd.NA)
-
-    return df
-
-
-def fetch_location_dataset(
+def fetch_city_data(
     city: str,
     latitude: float,
     longitude: float,
     timezone: str,
-    start_date: str | None,
-    end_date: str | None,
     past_days: int,
     forecast_days: int,
+    start_date: str | None,
+    end_date: str | None,
 ) -> pd.DataFrame:
     print(f"Fetching data for {city}...")
 
-    aqi_df = fetch_air_quality(
+    aqi_df = fetch_air_quality_data(
         latitude=latitude,
         longitude=longitude,
         timezone=timezone,
+        past_days=past_days,
+        forecast_days=forecast_days,
         start_date=start_date,
         end_date=end_date,
-        past_days=past_days if not (start_date and end_date) else None,
-        forecast_days=forecast_days,
     )
 
-    weather_df = fetch_weather(
+    weather_df = fetch_weather_data(
         latitude=latitude,
         longitude=longitude,
         timezone=timezone,
+        past_days=past_days,
+        forecast_days=forecast_days,
         start_date=start_date,
         end_date=end_date,
-        past_days=past_days if not (start_date and end_date) else None,
-        forecast_days=forecast_days,
     )
 
     print(f"AQI rows for {city}: {len(aqi_df)}")
     print(f"Weather rows for {city}: {len(weather_df)}")
 
-    combined_df = merge_air_quality_and_weather(aqi_df, weather_df)
-    feature_df = make_features_for_location(combined_df, city=city)
+    if aqi_df.empty and weather_df.empty:
+        return pd.DataFrame()
 
-    print(f"Feature rows for {city}: {len(feature_df)}")
-
-    return feature_df
-
-
-def save_feature_store(features: pd.DataFrame) -> pd.DataFrame:
-    FEATURE_STORE_PATH.parent.mkdir(parents=True, exist_ok=True)
-
-    features = features.copy()
-    features["time"] = pd.to_datetime(features["time"])
-
-    if FEATURE_STORE_PATH.exists():
-        old_df = pd.read_parquet(FEATURE_STORE_PATH)
-        old_df["time"] = pd.to_datetime(old_df["time"])
-
-        merged_df = pd.concat([old_df, features], ignore_index=True)
+    if aqi_df.empty:
+        merged_df = weather_df.copy()
+    elif weather_df.empty:
+        merged_df = aqi_df.copy()
     else:
-        merged_df = features
+        merge_keys = ["time", "latitude", "longitude"]
+        merged_df = pd.merge(
+            aqi_df,
+            weather_df,
+            on=merge_keys,
+            how="outer",
+            suffixes=("", "_weather"),
+        )
 
-    merged_df["location_key"] = (
-        merged_df["latitude"].round(4).astype(str)
-        + "_"
-        + merged_df["longitude"].round(4).astype(str)
-    )
+    merged_df["city"] = city
+    merged_df["latitude"] = round(float(latitude), 4)
+    merged_df["longitude"] = round(float(longitude), 4)
 
-    merged_df = merged_df.drop_duplicates(
-        subset=["time", "latitude", "longitude"],
-        keep="last",
-    )
-
-    merged_df = merged_df.sort_values(["city", "time"]).reset_index(drop=True)
-    merged_df.to_parquet(FEATURE_STORE_PATH, index=False)
-
-    print(f"Saved local feature store: {FEATURE_STORE_PATH}")
-    print(f"Local feature store rows: {len(merged_df)}")
+    print(f"Feature rows for {city}: {len(merged_df)}")
 
     return merged_df
 
 
-def build_all_features(
-    timezone: str,
-    start_date: str | None,
-    end_date: str | None,
-    past_days: int,
-    forecast_days: int,
-) -> pd.DataFrame:
-    all_location_features = []
+def remove_duplicate_columns(df: pd.DataFrame) -> pd.DataFrame:
+    df = df.copy()
+    df = df.loc[:, ~df.columns.duplicated()]
+    return df
 
-    for location in UAE_LOCATIONS:
-        try:
-            location_df = fetch_location_dataset(
-                city=location["city"],
-                latitude=location["latitude"],
-                longitude=location["longitude"],
-                timezone=timezone,
-                start_date=start_date,
-                end_date=end_date,
-                past_days=past_days,
-                forecast_days=forecast_days,
+
+def clean_column_names(df: pd.DataFrame) -> pd.DataFrame:
+    df = df.copy()
+
+    df.columns = [
+        str(column)
+        .strip()
+        .lower()
+        .replace(" ", "_")
+        .replace("-", "_")
+        .replace(".", "_")
+        for column in df.columns
+    ]
+
+    return df
+
+
+def cap_series(series: pd.Series, lower=None, upper=None) -> pd.Series:
+    cleaned = pd.to_numeric(series, errors="coerce")
+
+    if lower is not None:
+        cleaned = cleaned.mask(cleaned < lower, np.nan)
+
+    if upper is not None:
+        cleaned = cleaned.mask(cleaned > upper, upper)
+
+    return cleaned
+
+
+def clean_raw_values(df: pd.DataFrame) -> pd.DataFrame:
+    df = df.copy()
+
+    if "time" in df.columns:
+        df["time"] = pd.to_datetime(df["time"], errors="coerce")
+
+    df = df.dropna(subset=["time", "city"])
+    df["city"] = df["city"].astype(str).str.strip()
+    df = df[df["city"].str.lower() != "none"].copy()
+
+    for col in ["latitude", "longitude"]:
+        if col in df.columns:
+            df[col] = pd.to_numeric(df[col], errors="coerce")
+
+    if "us_aqi" in df.columns:
+        df["us_aqi"] = cap_series(df["us_aqi"], lower=0, upper=500)
+
+    for col in POLLUTANT_COLUMNS:
+        if col in df.columns:
+            df[col] = cap_series(df[col], lower=0, upper=None)
+
+    pollutant_caps = {
+        "pm2_5": 1000,
+        "pm10": 2000,
+        "carbon_monoxide": 50000,
+        "nitrogen_dioxide": 1000,
+        "sulphur_dioxide": 1000,
+        "ozone": 1000,
+        "dust": 3000,
+    }
+
+    for col, upper_limit in pollutant_caps.items():
+        if col in df.columns:
+            df[col] = cap_series(df[col], lower=0, upper=upper_limit)
+
+    if "temperature_2m" in df.columns:
+        df["temperature_2m"] = cap_series(df["temperature_2m"], lower=-10, upper=60)
+
+    if "relative_humidity_2m" in df.columns:
+        df["relative_humidity_2m"] = cap_series(df["relative_humidity_2m"], lower=0, upper=100)
+
+    if "precipitation" in df.columns:
+        df["precipitation"] = cap_series(df["precipitation"], lower=0, upper=300)
+
+    if "surface_pressure" in df.columns:
+        df["surface_pressure"] = cap_series(df["surface_pressure"], lower=850, upper=1100)
+
+    if "wind_speed_10m" in df.columns:
+        df["wind_speed_10m"] = cap_series(df["wind_speed_10m"], lower=0, upper=160)
+
+    if "wind_direction_10m" in df.columns:
+        wind_direction = pd.to_numeric(df["wind_direction_10m"], errors="coerce")
+        wind_direction = wind_direction % 360
+        df["wind_direction_10m"] = wind_direction
+
+    return df
+
+
+def fill_missing_values_by_city(df: pd.DataFrame) -> pd.DataFrame:
+    df = df.copy()
+    df = df.sort_values(["city", "time"]).reset_index(drop=True)
+
+    numeric_columns = df.select_dtypes(include=[np.number]).columns.tolist()
+
+    protected_columns = [
+        "latitude",
+        "longitude",
+    ]
+
+    fill_columns = [col for col in numeric_columns if col not in protected_columns]
+
+    for city, city_index in df.groupby("city").groups.items():
+        city_idx = list(city_index)
+
+        df.loc[city_idx, fill_columns] = (
+            df.loc[city_idx, fill_columns]
+            .ffill()
+            .bfill()
+        )
+
+    for col in fill_columns:
+        if df[col].isna().any():
+            df[col] = df[col].fillna(df[col].median())
+
+    return df
+
+
+def remove_extreme_outliers_iqr(df: pd.DataFrame) -> pd.DataFrame:
+    df = df.copy()
+
+    outlier_columns = [
+        "us_aqi",
+        "pm2_5",
+        "pm10",
+        "carbon_monoxide",
+        "nitrogen_dioxide",
+        "sulphur_dioxide",
+        "ozone",
+        "dust",
+        "temperature_2m",
+        "relative_humidity_2m",
+        "surface_pressure",
+        "wind_speed_10m",
+    ]
+
+    for col in outlier_columns:
+        if col not in df.columns:
+            continue
+
+        cleaned_chunks = []
+
+        for city, city_df in df.groupby("city"):
+            city_df = city_df.copy()
+
+            series = pd.to_numeric(city_df[col], errors="coerce")
+
+            if series.dropna().shape[0] < 20:
+                cleaned_chunks.append(city_df)
+                continue
+
+            q1 = series.quantile(0.01)
+            q99 = series.quantile(0.99)
+
+            city_df[col] = series.clip(lower=q1, upper=q99)
+
+            cleaned_chunks.append(city_df)
+
+        df = pd.concat(cleaned_chunks, ignore_index=True)
+
+    df = df.sort_values(["city", "time"]).reset_index(drop=True)
+
+    return df
+
+
+def clean_feature_data(df: pd.DataFrame) -> pd.DataFrame:
+    print("Starting data cleaning...")
+
+    initial_rows = len(df)
+
+    df = remove_duplicate_columns(df)
+    df = clean_column_names(df)
+
+    df = df.drop_duplicates(subset=["time", "city"], keep="last")
+
+    df = clean_raw_values(df)
+    df = fill_missing_values_by_city(df)
+    df = remove_extreme_outliers_iqr(df)
+    df = fill_missing_values_by_city(df)
+
+    final_rows = len(df)
+
+    print(f"Data cleaning completed. Rows before: {initial_rows}, after: {final_rows}")
+
+    return df
+
+
+def add_time_features(df: pd.DataFrame) -> pd.DataFrame:
+    df = df.copy()
+
+    df["hour"] = df["time"].dt.hour
+    df["day_of_week"] = df["time"].dt.dayofweek
+    df["day_of_month"] = df["time"].dt.day
+    df["month"] = df["time"].dt.month
+    df["is_weekend"] = df["day_of_week"].isin([5, 6]).astype(int)
+
+    df["hour_sin"] = np.sin(2 * np.pi * df["hour"] / 24)
+    df["hour_cos"] = np.cos(2 * np.pi * df["hour"] / 24)
+
+    df["day_of_week_sin"] = np.sin(2 * np.pi * df["day_of_week"] / 7)
+    df["day_of_week_cos"] = np.cos(2 * np.pi * df["day_of_week"] / 7)
+
+    return df
+
+
+def add_city_encoding(df: pd.DataFrame) -> pd.DataFrame:
+    df = df.copy()
+
+    sorted_cities = sorted(df["city"].dropna().unique())
+
+    city_to_id = {city: index for index, city in enumerate(sorted_cities)}
+
+    df["city_id"] = df["city"].map(city_to_id).fillna(-1).astype(int)
+
+    return df
+
+
+def add_lag_features(df: pd.DataFrame) -> pd.DataFrame:
+    df = df.copy()
+    df = df.sort_values(["city", "time"]).reset_index(drop=True)
+
+    for col in LAG_COLUMNS:
+        if col not in df.columns:
+            continue
+
+        for lag in LAG_HOURS:
+            df[f"{col}_lag_{lag}h"] = df.groupby("city")[col].shift(lag)
+
+    return df
+
+
+def add_rolling_features(df: pd.DataFrame) -> pd.DataFrame:
+    df = df.copy()
+    df = df.sort_values(["city", "time"]).reset_index(drop=True)
+
+    for col in ROLLING_COLUMNS:
+        if col not in df.columns:
+            continue
+
+        for window in ROLLING_WINDOWS:
+            df[f"{col}_rolling_mean_{window}h"] = (
+                df.groupby("city")[col]
+                .transform(lambda series: series.shift(1).rolling(window=window, min_periods=max(2, window // 3)).mean())
             )
 
-            all_location_features.append(location_df)
+            df[f"{col}_rolling_std_{window}h"] = (
+                df.groupby("city")[col]
+                .transform(lambda series: series.shift(1).rolling(window=window, min_periods=max(2, window // 3)).std())
+            )
 
-        except Exception as error:
-            print(f"Failed to process {location['city']}: {error}")
+    return df
 
-    if not all_location_features:
-        raise RuntimeError("No feature data was created for any location.")
 
-    combined_features = pd.concat(all_location_features, ignore_index=True)
-    combined_features = combined_features.sort_values(["city", "time"]).reset_index(drop=True)
+def add_pollutant_ratios(df: pd.DataFrame) -> pd.DataFrame:
+    df = df.copy()
 
-    return combined_features
+    if "pm2_5" in df.columns and "pm10" in df.columns:
+        df["pm25_to_pm10_ratio"] = df["pm2_5"] / df["pm10"].replace(0, np.nan)
+        df["pm25_to_pm10_ratio"] = df["pm25_to_pm10_ratio"].replace([np.inf, -np.inf], np.nan)
+
+    if "us_aqi" in df.columns and "pm2_5" in df.columns:
+        df["aqi_to_pm25_ratio"] = df["us_aqi"] / df["pm2_5"].replace(0, np.nan)
+        df["aqi_to_pm25_ratio"] = df["aqi_to_pm25_ratio"].replace([np.inf, -np.inf], np.nan)
+
+    if "us_aqi" in df.columns and "pm10" in df.columns:
+        df["aqi_to_pm10_ratio"] = df["us_aqi"] / df["pm10"].replace(0, np.nan)
+        df["aqi_to_pm10_ratio"] = df["aqi_to_pm10_ratio"].replace([np.inf, -np.inf], np.nan)
+
+    return df
+
+
+def add_weather_interaction_features(df: pd.DataFrame) -> pd.DataFrame:
+    df = df.copy()
+
+    if "temperature_2m" in df.columns and "relative_humidity_2m" in df.columns:
+        df["temp_humidity_interaction"] = df["temperature_2m"] * df["relative_humidity_2m"]
+
+    if "wind_speed_10m" in df.columns and "pm2_5" in df.columns:
+        df["wind_pm25_interaction"] = df["wind_speed_10m"] * df["pm2_5"]
+
+    if "wind_speed_10m" in df.columns and "pm10" in df.columns:
+        df["wind_pm10_interaction"] = df["wind_speed_10m"] * df["pm10"]
+
+    if "relative_humidity_2m" in df.columns and "pm2_5" in df.columns:
+        df["humidity_pm25_interaction"] = df["relative_humidity_2m"] * df["pm2_5"]
+
+    if "surface_pressure" in df.columns and "wind_speed_10m" in df.columns:
+        df["pressure_wind_interaction"] = df["surface_pressure"] * df["wind_speed_10m"]
+
+    return df
+
+
+def add_future_weather_features(df: pd.DataFrame) -> pd.DataFrame:
+    df = df.copy()
+    df = df.sort_values(["city", "time"]).reset_index(drop=True)
+
+    future_weather_columns = {
+        "temperature_2m": "temp",
+        "relative_humidity_2m": "humidity",
+        "surface_pressure": "pressure",
+        "wind_speed_10m": "wind",
+        "precipitation": "precip",
+    }
+
+    day_windows = {
+        "day1": (1, 24),
+        "day2": (25, 48),
+        "day3": (49, 72),
+    }
+
+    for source_col, short_name in future_weather_columns.items():
+        if source_col not in df.columns:
+            continue
+
+        for day_name, (start_hour, end_hour) in day_windows.items():
+            future_values = []
+
+            for _, city_df in df.groupby("city"):
+                city_series = city_df[source_col].reset_index(drop=True)
+
+                city_future_values = []
+
+                for index in range(len(city_series)):
+                    window = city_series.shift(-start_hour).iloc[index:index + (end_hour - start_hour + 1)]
+
+                    if window.dropna().empty:
+                        city_future_values.append(np.nan)
+                    elif source_col == "precipitation":
+                        city_future_values.append(window.sum())
+                    else:
+                        city_future_values.append(window.mean())
+
+                future_values.extend(city_future_values)
+
+            feature_name = f"future_{short_name}_{day_name}_avg"
+
+            if source_col == "precipitation":
+                feature_name = f"future_{short_name}_{day_name}_sum"
+
+            df[feature_name] = future_values
+
+    if "wind_speed_10m" in df.columns:
+        for day_name, (start_hour, end_hour) in day_windows.items():
+            future_values = []
+
+            for _, city_df in df.groupby("city"):
+                city_series = city_df["wind_speed_10m"].reset_index(drop=True)
+
+                city_future_values = []
+
+                for index in range(len(city_series)):
+                    window = city_series.shift(-start_hour).iloc[index:index + (end_hour - start_hour + 1)]
+
+                    if window.dropna().empty:
+                        city_future_values.append(np.nan)
+                    else:
+                        city_future_values.append(window.max())
+
+                future_values.extend(city_future_values)
+
+            df[f"future_wind_{day_name}_max"] = future_values
+
+    return df
+
+
+def add_target_columns(df: pd.DataFrame) -> pd.DataFrame:
+    df = df.copy()
+    df = df.sort_values(["city", "time"]).reset_index(drop=True)
+
+    target_windows = {
+        "target_aqi_day1_avg": (1, 24),
+        "target_aqi_day2_avg": (25, 48),
+        "target_aqi_day3_avg": (49, 72),
+        "target_aqi_next_72h_avg": (1, 72),
+    }
+
+    if "us_aqi" not in df.columns:
+        return df
+
+    for target_col, (start_hour, end_hour) in target_windows.items():
+        target_values = []
+
+        for _, city_df in df.groupby("city"):
+            city_series = city_df["us_aqi"].reset_index(drop=True)
+
+            city_target_values = []
+
+            for index in range(len(city_series)):
+                future_window = city_series.shift(-start_hour).iloc[index:index + (end_hour - start_hour + 1)]
+
+                if future_window.dropna().empty:
+                    city_target_values.append(np.nan)
+                else:
+                    city_target_values.append(future_window.mean())
+
+            target_values.extend(city_target_values)
+
+        df[target_col] = target_values
+
+    return df
+
+
+def clean_engineered_features(df: pd.DataFrame) -> pd.DataFrame:
+    df = df.copy()
+
+    df = df.replace([np.inf, -np.inf], np.nan)
+
+    numeric_columns = df.select_dtypes(include=[np.number]).columns.tolist()
+
+    for city, city_index in df.groupby("city").groups.items():
+        city_idx = list(city_index)
+
+        df.loc[city_idx, numeric_columns] = (
+            df.loc[city_idx, numeric_columns]
+            .ffill()
+            .bfill()
+        )
+
+    for col in numeric_columns:
+        if df[col].isna().any():
+            df[col] = df[col].fillna(df[col].median())
+
+    df = df.drop_duplicates(subset=["time", "city"], keep="last")
+    df = df.sort_values(["city", "time"]).reset_index(drop=True)
+
+    return df
+
+
+def build_features(raw_df: pd.DataFrame) -> pd.DataFrame:
+    print("Building features...")
+
+    df = raw_df.copy()
+
+    df = clean_feature_data(df)
+    df = add_time_features(df)
+    df = add_city_encoding(df)
+    df = add_lag_features(df)
+    df = add_rolling_features(df)
+    df = add_pollutant_ratios(df)
+    df = add_weather_interaction_features(df)
+    df = add_future_weather_features(df)
+    df = add_target_columns(df)
+    df = clean_engineered_features(df)
+
+    print(f"Feature engineering completed. Final shape: {df.shape}")
+
+    return df
+
+
+def fetch_all_cities(args) -> pd.DataFrame:
+    city_frames = []
+
+    if args.latitude is not None and args.longitude is not None:
+        custom_city_name = "Custom Location"
+
+        custom_df = fetch_city_data(
+            city=custom_city_name,
+            latitude=args.latitude,
+            longitude=args.longitude,
+            timezone=args.timezone,
+            past_days=args.past_days,
+            forecast_days=args.forecast_days,
+            start_date=args.start_date,
+            end_date=args.end_date,
+        )
+
+        if not custom_df.empty:
+            city_frames.append(custom_df)
+
+    else:
+        for city, location in CITY_LOCATIONS.items():
+            city_df = fetch_city_data(
+                city=city,
+                latitude=location["latitude"],
+                longitude=location["longitude"],
+                timezone=args.timezone,
+                past_days=args.past_days,
+                forecast_days=args.forecast_days,
+                start_date=args.start_date,
+                end_date=args.end_date,
+            )
+
+            if not city_df.empty:
+                city_frames.append(city_df)
+
+    if not city_frames:
+        return pd.DataFrame()
+
+    combined_df = pd.concat(city_frames, ignore_index=True)
+
+    return combined_df
+
+
+def merge_with_existing_feature_store(new_features: pd.DataFrame) -> pd.DataFrame:
+    if not FEATURE_STORE_PATH.exists():
+        return new_features
+
+    try:
+        existing_df = pd.read_parquet(FEATURE_STORE_PATH)
+
+        if existing_df.empty:
+            return new_features
+
+        existing_df = clean_column_names(existing_df)
+        new_features = clean_column_names(new_features)
+
+        combined_df = pd.concat([existing_df, new_features], ignore_index=True)
+
+        if "time" in combined_df.columns:
+            combined_df["time"] = pd.to_datetime(combined_df["time"], errors="coerce")
+
+        combined_df = combined_df.dropna(subset=["time", "city"])
+        combined_df = combined_df.drop_duplicates(subset=["time", "city"], keep="last")
+        combined_df = combined_df.sort_values(["city", "time"]).reset_index(drop=True)
+
+        return combined_df
+
+    except Exception as error:
+        print("Could not merge with existing feature store. Using new features only.")
+        print(error)
+        return new_features
+
+
+def save_local_feature_store(features: pd.DataFrame):
+    FEATURE_STORE_PATH.parent.mkdir(parents=True, exist_ok=True)
+
+    features.to_parquet(FEATURE_STORE_PATH, index=False)
+
+    print(f"Saved local feature store: {FEATURE_STORE_PATH}")
+    print(f"Local feature store rows: {len(features)}")
 
 
 def main():
-    parser = argparse.ArgumentParser(
-        description="Fetch AQI/weather data, engineer features, save locally and optionally to Hopsworks Feature Store."
-    )
+    args = parse_args()
 
-    parser.add_argument("--timezone", type=str, default="Asia/Dubai")
-    parser.add_argument("--start-date", type=str, default=None, help="YYYY-MM-DD")
-    parser.add_argument("--end-date", type=str, default=None, help="YYYY-MM-DD")
-    parser.add_argument("--past-days", type=int, default=92)
-    parser.add_argument("--forecast-days", type=int, default=4)
-    parser.add_argument("--skip-hopsworks", action="store_true")
-
-    args = parser.parse_args()
-
-    print("Starting AQI feature pipeline...")
+    print("Starting feature pipeline...")
     print(f"Timezone: {args.timezone}")
+    print(f"Past days: {args.past_days}")
+    print(f"Forecast days: {args.forecast_days}")
 
-    if args.start_date and args.end_date:
-        print(f"Mode: historical backfill from {args.start_date} to {args.end_date}")
-    else:
-        print(f"Mode: recent data with past_days={args.past_days}, forecast_days={args.forecast_days}")
+    raw_df = fetch_all_cities(args)
 
-    features = build_all_features(
-        timezone=args.timezone,
-        start_date=args.start_date,
-        end_date=args.end_date,
-        past_days=args.past_days,
-        forecast_days=args.forecast_days,
-    )
+    if raw_df.empty:
+        raise RuntimeError("No data fetched from APIs.")
 
-    merged_features = save_feature_store(features)
+    print(f"Raw fetched rows: {len(raw_df)}")
+
+    new_features = build_features(raw_df)
+
+    merged_features = merge_with_existing_feature_store(new_features)
+
+    merged_features = clean_feature_data(merged_features)
+    merged_features = add_time_features(merged_features)
+    merged_features = add_city_encoding(merged_features)
+    merged_features = add_lag_features(merged_features)
+    merged_features = add_rolling_features(merged_features)
+    merged_features = add_pollutant_ratios(merged_features)
+    merged_features = add_weather_interaction_features(merged_features)
+    merged_features = add_future_weather_features(merged_features)
+    merged_features = add_target_columns(merged_features)
+    merged_features = clean_engineered_features(merged_features)
+
+    save_local_feature_store(merged_features)
 
     if args.skip_hopsworks:
-        print("Skipping Hopsworks upload because --skip-hopsworks was provided.")
+        print("Hopsworks upload skipped by argument.")
     else:
         cloud_saved = save_features_to_hopsworks(merged_features)
 
