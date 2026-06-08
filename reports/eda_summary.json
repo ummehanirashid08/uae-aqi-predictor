@@ -1,60 +1,60 @@
 {
-    "generated_at_utc": "2026-06-05T16:43:36.519687+00:00",
+    "generated_at_utc": "2026-06-08T14:38:54.818327+00:00",
     "data_source": "Hopsworks Feature Store",
-    "rows": 105264,
+    "rows": 2016,
     "cities": 6,
-    "time_min": "2024-06-08 00:00:00+00:00",
-    "time_max": "2026-06-08 23:00:00+00:00",
-    "average_aqi": 122.633,
-    "max_aqi": 1244.0,
+    "time_min": "2026-05-29 00:00:00+00:00",
+    "time_max": "2026-06-11 23:00:00+00:00",
+    "average_aqi": 154.606,
+    "max_aqi": 507.0,
     "city_summary": [
         {
             "city": "Al Ain",
-            "rows": 17544,
-            "avg_aqi": 169.33,
-            "max_aqi": 1244,
-            "min_aqi": 34,
-            "latest_time": "2026-06-08 23:00:00+00:00"
-        },
-        {
-            "city": "Sharjah",
-            "rows": 17544,
-            "avg_aqi": 118.7,
-            "max_aqi": 441,
-            "min_aqi": 48,
-            "latest_time": "2026-06-08 23:00:00+00:00"
+            "rows": 336,
+            "avg_aqi": 272.78,
+            "max_aqi": 507,
+            "min_aqi": 147,
+            "latest_time": "2026-06-11 23:00:00+00:00"
         },
         {
             "city": "Dubai",
-            "rows": 17544,
-            "avg_aqi": 118.6,
-            "max_aqi": 252,
-            "min_aqi": 48,
-            "latest_time": "2026-06-08 23:00:00+00:00"
+            "rows": 336,
+            "avg_aqi": 138.8,
+            "max_aqi": 176,
+            "min_aqi": 113,
+            "latest_time": "2026-06-11 23:00:00+00:00"
+        },
+        {
+            "city": "Sharjah",
+            "rows": 336,
+            "avg_aqi": 138.19,
+            "max_aqi": 158,
+            "min_aqi": 114,
+            "latest_time": "2026-06-11 23:00:00+00:00"
         },
         {
             "city": "Ajman",
-            "rows": 17544,
-            "avg_aqi": 117.94,
-            "max_aqi": 284,
-            "min_aqi": 48,
-            "latest_time": "2026-06-08 23:00:00+00:00"
-        },
-        {
-            "city": "Abu Dhabi",
-            "rows": 17544,
-            "avg_aqi": 110.01,
-            "max_aqi": 280,
-            "min_aqi": 45,
-            "latest_time": "2026-06-08 23:00:00+00:00"
+            "rows": 336,
+            "avg_aqi": 131.51,
+            "max_aqi": 164,
+            "min_aqi": 107,
+            "latest_time": "2026-06-11 23:00:00+00:00"
         },
         {
             "city": "Ras Al Khaimah",
-            "rows": 17544,
-            "avg_aqi": 101.21,
-            "max_aqi": 286,
-            "min_aqi": 34,
-            "latest_time": "2026-06-08 23:00:00+00:00"
+            "rows": 336,
+            "avg_aqi": 130.51,
+            "max_aqi": 179,
+            "min_aqi": 83,
+            "latest_time": "2026-06-11 23:00:00+00:00"
+        },
+        {
+            "city": "Abu Dhabi",
+            "rows": 336,
+            "avg_aqi": 115.85,
+            "max_aqi": 161,
+            "min_aqi": 83,
+            "latest_time": "2026-06-11 23:00:00+00:00"
         }
     ],
     "available_pollutants": [
