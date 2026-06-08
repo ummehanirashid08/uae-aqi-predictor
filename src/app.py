@@ -10,7 +10,7 @@ import plotly.graph_objects as go
 import requests
 import streamlit as st
 
-from config import FEATURE_STORE_PATH, MODEL_PATH, METRICS_PATH
+from config import FEATURE_STORE_PATH, MODEL_PATH, METRICS_PATH, get_bool_setting, get_setting
 from hopsworks_store import load_features_from_hopsworks
 
 
@@ -2436,16 +2436,15 @@ def main():
     if feature_store_source_text == "Hopsworks Feature Store":
         feature_store_source_display = "Hopsworks Feature Store"
     elif not feature_store_source_text:
-        use_hopsworks_for_display = str(os.getenv("USE_HOPSWORKS", "")).strip().lower()
-        if use_hopsworks_for_display in {"1", "true", "yes", "y"}:
+        if get_bool_setting("USE_HOPSWORKS", False):
             feature_store_source_display = "Hopsworks Feature Store"
         else:
             feature_store_source_display = "Local Parquet Backup"
     else:
         feature_store_source_display = "Local Parquet Backup"
 
-    hopsworks_feature_group_name = os.getenv("FEATURE_GROUP_NAME", "aqi_features_clean").strip()
-    hopsworks_feature_group_version = os.getenv("FEATURE_GROUP_VERSION", "2").strip()
+    hopsworks_feature_group_name = str(get_setting("FEATURE_GROUP_NAME", "aqi_features_clean")).strip()
+    hopsworks_feature_group_version = str(get_setting("FEATURE_GROUP_VERSION", "2")).strip()
 
     if not hopsworks_feature_group_name:
         hopsworks_feature_group_name = "aqi_features_clean"

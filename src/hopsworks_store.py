@@ -12,40 +12,35 @@ import joblib
 import pandas as pd
 from dotenv import load_dotenv
 
+from config import get_bool_setting, get_int_setting, get_setting
+
 
 load_dotenv(override=True)
 
 
-def _env_enabled(value: str | None) -> bool:
-    return str(value or "").strip().lower() in {"1", "true", "yes", "y"}
-
-
 def _safe_int_env(name: str, default: int) -> int:
-    try:
-        return int(str(os.getenv(name, str(default))).strip())
-    except Exception:
-        return default
+    return get_int_setting(name, default)
 
 
 # Important:
 # Old feature group name "aqi_features" has broken/partial versions in your Hopsworks project.
 # So this file forces a clean feature group unless you intentionally set a different clean name.
-_RAW_FEATURE_GROUP_NAME = os.getenv("FEATURE_GROUP_NAME", "aqi_features_clean").strip()
+_RAW_FEATURE_GROUP_NAME = str(get_setting("FEATURE_GROUP_NAME", "aqi_features_clean")).strip()
 
 if not _RAW_FEATURE_GROUP_NAME or _RAW_FEATURE_GROUP_NAME == "aqi_features":
     FEATURE_GROUP_NAME = "aqi_features_clean"
 else:
     FEATURE_GROUP_NAME = _RAW_FEATURE_GROUP_NAME
 
-FEATURE_GROUP_VERSION = _safe_int_env("FEATURE_GROUP_VERSION", 1)
+FEATURE_GROUP_VERSION = _safe_int_env("FEATURE_GROUP_VERSION", 2)
 HOPSWORKS_UPLOAD_CHUNK_SIZE = _safe_int_env("HOPSWORKS_UPLOAD_CHUNK_SIZE", 3500)
 
-MODEL_NAME = os.getenv("MODEL_NAME", "uae_aqi_forecast_model").strip()
+MODEL_NAME = str(get_setting("MODEL_NAME", "uae_aqi_forecast_model")).strip()
 MODEL_VERSION = _safe_int_env("MODEL_VERSION", 1)
 
-PROJECT_NAME = os.getenv("HOPSWORKS_PROJECT_NAME", "").strip()
-API_KEY = os.getenv("HOPSWORKS_API_KEY", "").strip()
-USE_HOPSWORKS = _env_enabled(os.getenv("USE_HOPSWORKS", "false"))
+PROJECT_NAME = str(get_setting("HOPSWORKS_PROJECT_NAME", "")).strip()
+API_KEY = str(get_setting("HOPSWORKS_API_KEY", "")).strip()
+USE_HOPSWORKS = get_bool_setting("USE_HOPSWORKS", False)
 
 
 def print_hopsworks_config() -> None:
@@ -437,6 +432,7 @@ def load_features_from_hopsworks() -> Tuple[Optional[pd.DataFrame], str]:
     feature_store = get_feature_store()
 
     if feature_store is None:
+        print("Hopsworks read failed, falling back to local parquet.")
         return None, "Hopsworks Feature Store unavailable; using local feature store fallback."
 
     try:
@@ -464,6 +460,7 @@ def load_features_from_hopsworks() -> Tuple[Optional[pd.DataFrame], str]:
                 f"did not return usable data. Reason: {read_source}"
             )
             print(reason)
+            print("Hopsworks read failed, falling back to local parquet.")
             return None, reason
 
         print(f"Training data loaded from Hopsworks Feature Store: {len(df)} rows")
@@ -475,6 +472,7 @@ def load_features_from_hopsworks() -> Tuple[Optional[pd.DataFrame], str]:
             f"v{FEATURE_GROUP_VERSION}: {error}"
         )
         print(reason)
+        print("Hopsworks read failed, falling back to local parquet.")
         return None, reason
 
 

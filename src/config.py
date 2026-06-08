@@ -6,6 +6,40 @@ from dotenv import load_dotenv
 load_dotenv()
 
 
+def get_setting(name, default=None):
+    value = os.getenv(name)
+
+    if value not in [None, ""]:
+        return value
+
+    try:
+        import streamlit as st
+
+        if name in st.secrets:
+            return st.secrets[name]
+
+    except Exception:
+        pass
+
+    return default
+
+
+def get_bool_setting(name, default=False):
+    value = get_setting(name, default)
+
+    if isinstance(value, bool):
+        return value
+
+    return str(value or "").strip().lower() in {"true", "1", "yes", "y"}
+
+
+def get_int_setting(name, default=0):
+    try:
+        return int(str(get_setting(name, default)).strip())
+    except Exception:
+        return default
+
+
 ROOT_DIR = Path(__file__).resolve().parents[1]
 
 DATA_DIR = ROOT_DIR / "data"
@@ -20,14 +54,14 @@ FEATURE_STORE_PATH = DATA_DIR / "feature_store.parquet"
 MODEL_PATH = MODELS_DIR / "aqi_model.joblib"
 METRICS_PATH = MODELS_DIR / "metrics.json"
 
-USE_HOPSWORKS = os.getenv("USE_HOPSWORKS", "false").lower() == "true"
-HOPSWORKS_API_KEY = os.getenv("HOPSWORKS_API_KEY")
-HOPSWORKS_PROJECT_NAME = os.getenv("HOPSWORKS_PROJECT_NAME", "uae_aqi_predictor")
+USE_HOPSWORKS = get_bool_setting("USE_HOPSWORKS", False)
+HOPSWORKS_API_KEY = get_setting("HOPSWORKS_API_KEY")
+HOPSWORKS_PROJECT_NAME = get_setting("HOPSWORKS_PROJECT_NAME", "uae_aqi_predictor")
 
-HOPSWORKS_FEATURE_GROUP_NAME = "aqi_features"
-HOPSWORKS_FEATURE_GROUP_VERSION = 1
+HOPSWORKS_FEATURE_GROUP_NAME = get_setting("FEATURE_GROUP_NAME", "aqi_features_clean")
+HOPSWORKS_FEATURE_GROUP_VERSION = get_int_setting("FEATURE_GROUP_VERSION", 2)
 
-HOPSWORKS_MODEL_NAME = "aqi_forecasting_model"
+HOPSWORKS_MODEL_NAME = get_setting("MODEL_NAME", "aqi_forecasting_model")
 
 
 UAE_LOCATIONS = [
