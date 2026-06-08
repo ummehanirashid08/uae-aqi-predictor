@@ -1417,7 +1417,7 @@ def normalize_columns(df):
     return df
 
 
-@st.cache_data(ttl=15 * 60, show_spinner=False)
+@st.cache_data(ttl=60, show_spinner=False)
 def load_feature_store():
     cloud_df, cloud_source = load_features_from_hopsworks()
 
@@ -1426,7 +1426,7 @@ def load_feature_store():
         df["time"] = pd.to_datetime(df["time"], errors="coerce")
         df = df.dropna(subset=["time"])
         df = df.sort_values("time").reset_index(drop=True)
-        return df, cloud_source
+        return df, "Hopsworks Feature Store"
 
     if not FEATURE_STORE_PATH.exists():
         st.error("Feature store not found. Please run feature_pipeline.py first.")
@@ -1438,7 +1438,7 @@ def load_feature_store():
     df = df.dropna(subset=["time"])
     df = df.sort_values("time").reset_index(drop=True)
 
-    return df, "Local Parquet feature store"
+    return df, "Local Parquet Backup"
 
 
 def load_model_bundle():
@@ -2204,6 +2204,7 @@ def main():
     setup_page()
 
     df, feature_store_source = load_feature_store()
+    print(f"Dashboard feature store source: {feature_store_source}")
     df = create_city_column(df)
 
     model_bundle = load_model_bundle()
@@ -2433,13 +2434,12 @@ def main():
     # -------------------------
     feature_store_source_text = str(feature_store_source or "").strip()
 
-    if feature_store_source_text == "Hopsworks Feature Store":
+    if "hopsworks" in feature_store_source_text.lower():
         feature_store_source_display = "Hopsworks Feature Store"
-    elif not feature_store_source_text:
-        if get_bool_setting("USE_HOPSWORKS", False):
-            feature_store_source_display = "Hopsworks Feature Store"
-        else:
-            feature_store_source_display = "Local Parquet Backup"
+    elif feature_store_source_text:
+        feature_store_source_display = "Local Parquet Backup"
+    elif get_bool_setting("USE_HOPSWORKS", False):
+        feature_store_source_display = "Hopsworks Feature Store"
     else:
         feature_store_source_display = "Local Parquet Backup"
 
