@@ -2,12 +2,10 @@ streamlit==1.40.2
 pandas==2.2.3
 numpy==1.26.4
 scikit-learn==1.5.2
-scipy==1.17.1
+scipy==1.14.1
 plotly==5.24.1
 joblib==1.4.2
 requests==2.32.3
 python-dotenv==1.0.1
 pyarrow==17.0.0
-hopsworks==4.2.6
 xgboost==2.1.1
-shap==0.46.0
