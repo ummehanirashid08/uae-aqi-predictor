@@ -1417,7 +1417,7 @@ def normalize_columns(df):
     return df
 
 
-@st.cache_data(ttl=60, show_spinner=False)
+@st.cache_data(ttl=300, show_spinner=False)
 def load_feature_store():
     cloud_df, cloud_source = load_features_from_hopsworks()
 
@@ -2204,7 +2204,8 @@ def main():
     setup_page()
 
     df, feature_store_source = load_feature_store()
-    print(f"Dashboard feature store source: {feature_store_source}")
+    print(f"Feature store source used: {feature_store_source}")
+    print(f"Feature store rows loaded: {len(df) if df is not None else 0}")
     df = create_city_column(df)
 
     model_bundle = load_model_bundle()
@@ -2434,11 +2435,7 @@ def main():
     # -------------------------
     feature_store_source_text = str(feature_store_source or "").strip()
 
-    if "hopsworks" in feature_store_source_text.lower():
-        feature_store_source_display = "Hopsworks Feature Store"
-    elif feature_store_source_text:
-        feature_store_source_display = "Local Parquet Backup"
-    elif get_bool_setting("USE_HOPSWORKS", False):
+    if feature_store_source_text == "Hopsworks Feature Store":
         feature_store_source_display = "Hopsworks Feature Store"
     else:
         feature_store_source_display = "Local Parquet Backup"
