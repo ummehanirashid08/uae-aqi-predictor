@@ -56,3 +56,11 @@ Local Model Backup / Model Registry Attempt
 Streamlit Dashboard
     ↓
 EDA and Explainability Reports
+
+```
+
+## Project Report
+
+The complete project report is available here:
+
+[View Project Report PDF](reports/Weather%20AQI%20Predictor%20Project%20Report.pdf)
