@@ -1,60 +1,60 @@
 {
-    "generated_at_utc": "2026-08-09T23:46:43.964368+00:00",
+    "generated_at_utc": "2026-08-16T23:34:38.244710+00:00",
     "data_source": "Local Parquet Feature Store",
-    "rows": 114768,
+    "rows": 115776,
     "cities": 6,
     "time_min": "2024-06-07 00:00:00",
-    "time_max": "2026-08-12 23:00:00",
-    "average_aqi": 125.192,
+    "time_max": "2026-08-19 23:00:00",
+    "average_aqi": 125.652,
     "max_aqi": 500.0,
     "city_summary": [
         {
             "city": "Al Ain",
-            "rows": 19128,
-            "avg_aqi": 172.92,
+            "rows": 19296,
+            "avg_aqi": 173.95,
             "max_aqi": 500.0,
             "min_aqi": 56.0,
-            "latest_time": "2026-08-12 23:00:00"
+            "latest_time": "2026-08-19 23:00:00"
         },
         {
             "city": "Dubai",
-            "rows": 19128,
-            "avg_aqi": 121.64,
+            "rows": 19296,
+            "avg_aqi": 122.05,
             "max_aqi": 207.0,
-            "min_aqi": 60.0,
-            "latest_time": "2026-08-12 23:00:00"
+            "min_aqi": 61.0,
+            "latest_time": "2026-08-19 23:00:00"
         },
         {
             "city": "Sharjah",
-            "rows": 19128,
-            "avg_aqi": 120.51,
+            "rows": 19296,
+            "avg_aqi": 120.85,
             "max_aqi": 223.0,
             "min_aqi": 68.0,
-            "latest_time": "2026-08-12 23:00:00"
+            "latest_time": "2026-08-19 23:00:00"
         },
         {
             "city": "Ajman",
-            "rows": 19128,
-            "avg_aqi": 120.14,
+            "rows": 19296,
+            "avg_aqi": 120.48,
             "max_aqi": 204.0,
             "min_aqi": 63.0,
-            "latest_time": "2026-08-12 23:00:00"
+            "latest_time": "2026-08-19 23:00:00"
         },
         {
             "city": "Abu Dhabi",
-            "rows": 19128,
-            "avg_aqi": 112.36,
+            "rows": 19296,
+            "avg_aqi": 112.74,
             "max_aqi": 204.0,
             "min_aqi": 56.0,
-            "latest_time": "2026-08-12 23:00:00"
+            "latest_time": "2026-08-19 23:00:00"
         },
         {
             "city": "Ras Al Khaimah",
-            "rows": 19128,
-            "avg_aqi": 103.58,
+            "rows": 19296,
+            "avg_aqi": 103.84,
             "max_aqi": 216.0,
             "min_aqi": 47.0,
-            "latest_time": "2026-08-12 23:00:00"
+            "latest_time": "2026-08-19 23:00:00"
         }
     ],
     "available_pollutants": [
